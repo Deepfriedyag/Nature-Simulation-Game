@@ -1,0 +1,4 @@
+repository "CS NEA Project Windows@DeepfriedGames@cloud"
+  path "/"
+    br "/main"
+    co "/main"
