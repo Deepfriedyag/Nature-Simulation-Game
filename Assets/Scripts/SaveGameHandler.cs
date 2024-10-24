@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class SaveGameHandler : MonoBehaviour
 {
-    [SerializeField]
-    private readonly MapGenerator MapGenerator; // reference to my class.
+    [SerializeField] private readonly MapGenerator MapGenerator; // reference to my class.
 
     [System.Serializable] // this attribute tells Unity to serialize this class. This means that it can be converted to a byte stream and saved to disk
     public class GameData
