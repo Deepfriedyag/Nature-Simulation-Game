@@ -411,6 +411,7 @@ GameObject:
   m_Component:
   - component: {fileID: 154331796}
   - component: {fileID: 154331795}
+  - component: {fileID: 154331797}
   m_Layer: 0
   m_Name: Menu Handler
   m_TagString: Untagged
@@ -430,9 +431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dcb485c575c9564cb7c08a9735ba01e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveGameHandler: {fileID: 0}
-  MapGenerator: {fileID: 0}
-  PlaceVegetation: {fileID: 0}
+  SaveGameHandler: {fileID: 154331797}
+  MapGenerator: {fileID: 1379293477}
+  PlaceVegetation: {fileID: 266414675}
   pause_menu_panel: {fileID: 1676705735}
   options_menu_panel: {fileID: 1571856859}
   main_menu_panel: {fileID: 1676705735}
@@ -451,6 +452,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1227121051}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &154331797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154331794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00efb619f27a5514eacb8321b6f254e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &158952370
 GameObject:
   m_ObjectHideFlags: 0
