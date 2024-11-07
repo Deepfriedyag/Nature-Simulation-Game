@@ -3,12 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base class for all unity scripts
 {
-    [SerializeField] // [SerializeField] attribute makes a private variable visible in the Unity editor(by default only public variables are visible)
-    private SaveGameHandler SaveGameHandler; // reference to my class
-    [SerializeField]
-    private MapGenerator MapGenerator; // reference to my class
-    [SerializeField]
-    private PlaceVegetation PlaceVegetation; // reference to my class
+    [SerializeField] private SaveGameHandler SaveGameHandler; // reference to my class
 
     // references to each menu panel - I have to set these myself manually in the unity editor because these are "game objects" instead of scripts and unity can't serialize them
     public GameObject pause_menu_panel;
@@ -79,15 +74,14 @@ public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base
 
     public void NewGame()
     {
-        MapGenerator.GenerateRandomSeed(); // to create a random world
+        MapGenerator.new_game = true; // set the variable in my class to true to generate a random game world
         SceneManager.LoadScene("Game");
-        PlaceVegetation.PlaceObjects();
         Time.timeScale = 1;
     }
 
     public void LoadGame()
     {
-        SaveGameHandler.LoadGame();
+        MapGenerator.new_game = false;
         SceneManager.LoadScene("Game");
         Time.timeScale = 1;
     }

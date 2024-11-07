@@ -18,7 +18,8 @@ public class SpreadVegetation : MonoBehaviour
 
     void Start() // called once when the script is first loaded
     {
-        InvokeRepeating(nameof(Spread), spread_check_interval, spread_check_interval); // call the Spread method every <check_interval> seconds
+        Debug.Log("HELLOOOOO IS THIS WORKING FFS");
+        InvokeRepeating(nameof(Spread), spread_check_interval, spread_check_interval); // call the Spread method every <spread_check_interval> seconds
     }
 
     public void Spread()

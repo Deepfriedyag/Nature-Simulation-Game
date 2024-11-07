@@ -371,6 +371,7 @@
 "Assets/Scripts/Menus/MenuHandler.cs"
 "Assets/Scripts/SaveGameHandler.cs"
 "Assets/Scripts/SpriteBillboard.cs"
+"Assets/test.cs"
 -langversion:9.0
 /deterministic
 /optimize+

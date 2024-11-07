@@ -2,6 +2,28 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
+    private const byte MAP_SIZE = 241; // 241 because 240 (241 - 1) is divisible by a lot of numbers and this will be useful when implementing optimisations later on
+
+    public static int world_seed; // the same seed value will generate the same map. This variable is static so it can be accessed from other classes without needing a reference to the class
+    public static bool new_game; // if the world will be generated with a new (random) seed
+    public bool auto_update_map; // if the map should update itself automatically when a value is changed. Useful for debugging and testing the map generation
+
+    [Range(0, 6)] [SerializeField] private int level_of_detail; // the level of detail of the mesh (the better level of detail, the more vertices the mesh will have)
+    [SerializeField] private int octaves; // the number of layers of noise that will be added together
+    [SerializeField] private float noise_scale; // the scale of the noise algorithm
+    [SerializeField] private float mesh_height_multiplier; // the multiplier of the height of the mesh
+    [SerializeField] private float lacunarity; // the rate at which the frequency of the noise increases
+    [Range(0, 1)] // this attribute turns persistance into a slider in the unity editor with values clamped between 0 and 1
+    [SerializeField] private float persistance; // the rate at which the amplitude of the noise decreases
+
+    [SerializeField] private DrawMode draw_mode; // the draw mode of the map
+    [SerializeField] private Vector2 offset; // the offset of the noise map
+    [SerializeField] private TerrainType[] regions; // the regions of the map (the regions are the different colours/biomes of the map)
+    [SerializeField] private AnimationCurve mesh_height_curve; // the curve of the mesh height (I set the curve to be a exponential curve in the unity editor so the terrain looks more natural)
+
+    [SerializeField] private PlaceVegetation PlaceVegetation; // reference to my class
+    [SerializeField] private SaveGameHandler SaveGameHandler; // reference to my class
+
     [SerializeField] // this attribute makes a private variable show up in the unity editor
     private enum DrawMode // different draw modes for the map, useful for debugging
     {
@@ -18,37 +40,32 @@ public class MapGenerator : MonoBehaviour
         public Color colour;
     }
 
-    private const byte MAP_SIZE = 241; // 241 because 240 (241 - 1) is divisible by a lot of numbers and this will be useful when implementing optimisations later on
-
-    public int seed; // the same seed will generate the same map
-    [Range(0, 6)] [SerializeField] private int level_of_detail; // the level of detail of the mesh (the better level of detail, the more vertices the mesh will have)
-    [SerializeField] private int octaves; // the number of layers of noise that will be added together
-    [SerializeField] private float noise_scale; // the scale of the noise algorithm
-    [SerializeField] private float mesh_height_multiplier; // the multiplier of the height of the mesh
-    [SerializeField] private float lacunarity; // the rate at which the frequency of the noise increases
-    [Range(0, 1)] // this attribute turns persistance into a slider in the unity editor with values clamped between 0 and 1
-    [SerializeField] private float persistance; // the rate at which the amplitude of the noise decreases
-
-    [SerializeField] private DrawMode draw_mode; // the draw mode of the map
-    [SerializeField] private Vector2 offset; // the offset of the noise map
-    public bool auto_update_map; // if the map should update itself automatically when a value is changed
-    [SerializeField] private TerrainType[] regions; // the regions of the map (the regions are the different colours/biomes of the map)
-    [SerializeField] private AnimationCurve mesh_height_curve; // the curve of the mesh height (I set the curve to be a exponential curve in the unity editor so the terrain looks more natural)
-
-    void Start() // this reserved unity method is called only when the script is first loaded
+    private void Start() // called once when the script is first loaded
     {
-        GenerateMap();
+        if (new_game == true)
+        {
+            GenerateRandomSeed();
+            GenerateMap();
+            Debug.Log("Info - Generated game world with a new seed: " + world_seed); // Debug.Log is a method that prints a message to the unity's built in console for debugging
+            PlaceVegetation.PlaceObjects();
+            Debug.Log("Info - Placed vegetation");
+        }
+        else
+        {
+            SaveGameHandler.LoadGame();
+            GenerateMap();
+        }
     }
 
     public int GenerateRandomSeed() // we return the seed (my SaveGameHandler class accesses this variable) for when we want to generate the same map again after saving the game
     {
-        seed = Random.Range(int.MinValue, int.MaxValue);
-        return seed;
+        world_seed = Random.Range(int.MinValue, int.MaxValue);
+        return world_seed;
     }
 
     public void GenerateMap()
     {
-        float[,] noise_map = Noise.GenerateNoiseMap(MAP_SIZE, MAP_SIZE, noise_scale, octaves, persistance, lacunarity, seed, offset);
+        float[,] noise_map = Noise.GenerateNoiseMap(MAP_SIZE, MAP_SIZE, noise_scale, octaves, persistance, lacunarity, world_seed, offset);
         Color[] colour_map = new Color[MAP_SIZE * MAP_SIZE];
 
         for (int y = 0; y < MAP_SIZE; y++)
@@ -85,7 +102,7 @@ public class MapGenerator : MonoBehaviour
 
     }
 
-    private void OnValidate() // makes you unable to set these values lower than specified. The OnValidate method activates when one of the values are changed
+    private void OnValidate() // makes me unable to set these values lower than specified as it would break the map generation. The OnValidate method activates when one of the values are changed
     {
         if (lacunarity < 1)
         {

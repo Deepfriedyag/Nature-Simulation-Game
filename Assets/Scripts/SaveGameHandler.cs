@@ -3,7 +3,33 @@ using UnityEngine;
 
 public class SaveGameHandler : MonoBehaviour
 {
-    [SerializeField] private readonly MapGenerator MapGenerator; // reference to my class.
+    [SerializeField] private Dictionary<string, string> vegetation_type_to_prefab_name = new Dictionary<string, string>();
+    [SerializeField] private Dictionary<string, GameObject> vegetation_prefabs = new Dictionary<string, GameObject>();
+    // DO THE ABOVE FOR ANIMALS LATER []
+
+    [SerializeField] private Transform vegetation_parent;
+ 
+    private void Awake() // awake is a reserved Unity method that is run when the script is first loaded
+    {
+        // map saved names to actual prefab names
+        vegetation_type_to_prefab_name["Grass(Clone)"] = "Grass"; // assumes prefab is named "Grass" in the Resources folder
+        vegetation_type_to_prefab_name["Tree(Clone)"] = "Tree";
+
+        // load prefabs from Resources based on mapped names
+        foreach (var entry in vegetation_type_to_prefab_name)
+        {
+            GameObject prefab = Resources.Load<GameObject>(entry.Value);
+            if (prefab != null)
+            {
+                vegetation_prefabs[entry.Key] = prefab;
+                Debug.Log($"Loaded prefab for {entry.Key}: {entry.Value}");
+            }
+            else
+            {
+                Debug.LogWarning($"Prefab {entry.Value} not found in Resources for vegetation type {entry.Key}");
+            }
+        }
+    }
 
     [System.Serializable] // this attribute tells Unity to serialize this class. This means that it can be converted to a byte stream and saved to disk
     public class GameData
@@ -41,7 +67,7 @@ public class SaveGameHandler : MonoBehaviour
         GameData game_data = new GameData();
         GameObject player = GameObject.FindGameObjectWithTag("MainCamera"); // find the player object by tag for reference because it is a game object and not a script
 
-        game_data.world_seed = MapGenerator.seed;
+        game_data.world_seed = MapGenerator.world_seed;
         game_data.player_position = player.transform.position;
         game_data.player_rotation = player.transform.eulerAngles;
 
@@ -80,8 +106,10 @@ public class SaveGameHandler : MonoBehaviour
 
     public void SaveGame()
     {
+        GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
+
         GameData game_data = GatherGameData();
-        string game_location_path = Application.dataPath + "/Saves"; // Application.dataPath is consistent across all platforms and points to the data folder of the game
+        string game_location_path = Application.persistentDataPath + "/Saves.json"; // Application.persistentDataPath is consistent across all platforms and points to the data folder of the game
 
         string save_file = JsonUtility.ToJson(game_data, true); // convert game data to JSON format. the boolean parameter (true) makes the JSON output more readable by adding more spacing
         System.IO.File.WriteAllText(game_location_path, save_file); // write the JSON data to a file
@@ -90,29 +118,38 @@ public class SaveGameHandler : MonoBehaviour
 
     public void LoadGame()
     {
-        try // this is to prevent a possible crash if the file we are looking for does not exist. since this method will be called from a button click, we don't need to worry about making a while loop to handle this case
+        try // this is to prevent a possible crash if the file we are looking for does not exist. since this method will be called from a button click, we don't need to worry about making a loop handle this case
         {
-            string json = System.IO.File.ReadAllText(Application.dataPath + "/Saves"); // read the JSON data from the file
+            string json = System.IO.File.ReadAllText(Application.persistentDataPath + "/Saves.json"); // read the JSON data from the file
             GameData game_data = JsonUtility.FromJson<GameData>(json); // convert the JSON data back to a GameData object
 
             // load player data
             GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
-            MapGenerator.seed = game_data.world_seed;
+            MapGenerator.world_seed = game_data.world_seed;
             player.transform.position = game_data.player_position;
             player.transform.eulerAngles = game_data.player_rotation;
 
             // load animal data
-            // FIX THIS LATER []
+            // ADD THIS LATER []
 
             // load vegetation data
             foreach (VegetationData veg_data in game_data.vegetation_data)
             {
-                Instantiate(Resources.Load(veg_data.vegetation_type), veg_data.vegetation_position, Quaternion.Euler(veg_data.vegetation_rotation));
+                if (vegetation_prefabs.TryGetValue(veg_data.vegetation_type, out GameObject prefab))
+                {
+                    Instantiate(prefab, veg_data.vegetation_position, Quaternion.Euler(veg_data.vegetation_rotation), vegetation_parent);
+                }
+                else
+                {
+                    Debug.LogWarning($"Warning - No prefab found for vegetation type: {veg_data.vegetation_type}");
+                }
             }
+
+            Debug.Log("Info - Save loaded from " + Application.persistentDataPath + "/Saves.json");
         }
         catch
         {
-            Debug.Log("error - No save file found, cannot load game");
+            Debug.Log("Error - No save file found, cannot load game");
         }
         
     }
