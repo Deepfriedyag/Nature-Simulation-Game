@@ -3,26 +3,25 @@ using UnityEngine;
 
 public class SaveGameHandler : MonoBehaviour
 {
-    [SerializeField] private Dictionary<string, string> vegetation_type_to_prefab_name = new Dictionary<string, string>();
-    [SerializeField] private Dictionary<string, GameObject> vegetation_prefabs = new Dictionary<string, GameObject>();
+    [SerializeField] private Dictionary<string, string> object_type_to_prefab_name = new Dictionary<string, string>();
+    [SerializeField] private Dictionary<string, GameObject> object_prefabs = new Dictionary<string, GameObject>();
     // DO THE ABOVE FOR ANIMALS LATER []
 
-    [SerializeField] private Transform vegetation_parent;
+    [SerializeField] private Transform spawned_object_parent;
  
     private void Awake() // awake is a reserved Unity method that is run when the script is first loaded
     {
         // map saved names to actual prefab names
-        vegetation_type_to_prefab_name["Grass(Clone)"] = "Grass"; // assumes prefab is named "Grass" in the Resources folder
-        vegetation_type_to_prefab_name["Tree(Clone)"] = "Tree";
+        object_type_to_prefab_name["Grass(Clone)"] = "Grass"; // assumes prefab is named "Grass" in the Resources folder
+        object_type_to_prefab_name["Tree(Clone)"] = "Tree";
 
         // load prefabs from Resources based on mapped names
-        foreach (var entry in vegetation_type_to_prefab_name)
+        foreach (var entry in object_type_to_prefab_name)
         {
             GameObject prefab = Resources.Load<GameObject>(entry.Value);
             if (prefab != null)
             {
-                vegetation_prefabs[entry.Key] = prefab;
-                Debug.Log($"Loaded prefab for {entry.Key}: {entry.Value}");
+                object_prefabs[entry.Key] = prefab;
             }
             else
             {
@@ -135,9 +134,9 @@ public class SaveGameHandler : MonoBehaviour
             // load vegetation data
             foreach (VegetationData veg_data in game_data.vegetation_data)
             {
-                if (vegetation_prefabs.TryGetValue(veg_data.vegetation_type, out GameObject prefab))
+                if (object_prefabs.TryGetValue(veg_data.vegetation_type, out GameObject prefab))
                 {
-                    Instantiate(prefab, veg_data.vegetation_position, Quaternion.Euler(veg_data.vegetation_rotation), vegetation_parent);
+                    Instantiate(prefab, veg_data.vegetation_position, Quaternion.Euler(veg_data.vegetation_rotation), spawned_object_parent);
                 }
                 else
                 {

@@ -10,7 +10,7 @@ public class PlaceVegetation : MonoBehaviour
 
     public List<GameObject> vegetation_prefabs; // list of the vegetation prefabs (tree, grass etc.) to spawn in the world
     public MeshFilter terrain_mesh_filter; // reference to the MeshFilter of the terrain mesh in the game world
-    public Transform vegetation_parent; // parent object to hold all the spawned gameobjects
+    public Transform spawned_object_parent; // parent object to hold all the spawned gameobjects
     private Mesh terrain_mesh;
 
     public void PlaceObjects()
@@ -39,7 +39,7 @@ public class PlaceVegetation : MonoBehaviour
             if (world_position.y >= min_height && world_position.y <= max_height)
             {
                 int random_prefab_index = Random.Range(0, vegetation_prefabs.Count);
-                GameObject tree = Instantiate(vegetation_prefabs[random_prefab_index], world_position + normal * height_offset, Quaternion.identity, vegetation_parent); // spawn a vegetation prefab at the world position as a child object
+                GameObject tree = Instantiate(vegetation_prefabs[random_prefab_index], world_position + normal * height_offset, Quaternion.identity, spawned_object_parent); // spawn a vegetation prefab at the world position as a child object
                 tree.transform.up = normal;
             }
 

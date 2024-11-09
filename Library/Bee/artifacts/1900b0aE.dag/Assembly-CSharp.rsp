@@ -369,9 +369,10 @@
 "Assets/Scripts/Map Generation/TextureGenerator.cs"
 "Assets/Scripts/Menus/ConfigMenu.cs"
 "Assets/Scripts/Menus/MenuHandler.cs"
+"Assets/Scripts/Menus/ObjectSpawner.cs"
+"Assets/Scripts/Menus/SpawnUI.cs"
 "Assets/Scripts/SaveGameHandler.cs"
 "Assets/Scripts/SpriteBillboard.cs"
-"Assets/test.cs"
 -langversion:9.0
 /deterministic
 /optimize+
