@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.AI.Navigation;
-using System.CodeDom.Compiler;
 
 // this class bakes the navmesh (required for AI navigation) at runtime. Normally this is not needed but since the game world is procedurally generated, we need this
 public class BakeNavmesh : MonoBehaviour

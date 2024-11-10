@@ -22,7 +22,7 @@ public class ObjectSpawner : MonoBehaviour
         if (index >= 0 && index < spawnable_objects.Length)
         {
             selected_object = spawnable_objects[index];
-            Debug.Log("Info - Selected object: " + selected_object.name);
+            IngameConsole.Instance.LogMessage($"Selected object: {selected_object.name}");
         }
         else
         {
@@ -35,10 +35,11 @@ public class ObjectSpawner : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
 
         // Only sample a position on the NavMesh
-        if (NavMesh.SamplePosition(ray.origin + ray.direction * 10f, out NavMeshHit navHit, max_navmesh_distance, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(ray.origin + ray.direction * 10f, out NavMeshHit nav_hit, max_navmesh_distance, NavMesh.AllAreas))
         {
-            Vector3 spawnPosition = navHit.position + Vector3.up * height_offset;
-            GameObject spawnedObject = Instantiate(selected_object, spawnPosition, Quaternion.identity, player_spawned_objects_parent);
+            Vector3 spawn_position = nav_hit.position + Vector3.up * height_offset;
+            GameObject spawned_object = Instantiate(selected_object, spawn_position, Quaternion.identity, player_spawned_objects_parent);
+            IngameConsole.Instance.LogMessage($"Spawned {selected_object.name}");
         }
 
     }

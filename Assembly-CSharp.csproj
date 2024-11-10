@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Map Generation\PlaceVegetation.cs" />
     <Compile Include="Assets\Scripts\Map Generation\BakeNavmesh.cs" />
     <Compile Include="Assets\Scripts\Menus\ConfigMenu.cs" />
+    <Compile Include="Assets\Scripts\Menus\IngameConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

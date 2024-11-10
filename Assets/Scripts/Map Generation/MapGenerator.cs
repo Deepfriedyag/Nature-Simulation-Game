@@ -46,14 +46,16 @@ public class MapGenerator : MonoBehaviour
         {
             GenerateRandomSeed();
             GenerateMap();
-            Debug.Log("Info - Generated game world with a new seed: " + world_seed); // Debug.Log is a method that prints a message to the unity's built in console for debugging
+            Debug.Log("Info - Generated world with the seed: " + world_seed); // Debug.Log is a method that prints a message to the unity's built in dev console for debugging purposes
             PlaceVegetation.PlaceObjects();
             Debug.Log("Info - Placed vegetation");
+            IngameConsole.Instance.LogMessage("Generated new world with the seed: " + world_seed); // the player can see this message in the game
         }
         else
         {
             SaveGameHandler.LoadGame();
             GenerateMap();
+            IngameConsole.Instance.LogMessage("Loaded saved game");
         }
     }
 
