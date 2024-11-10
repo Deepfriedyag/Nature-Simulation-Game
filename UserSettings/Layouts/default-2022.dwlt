@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 2048
     height: 1068.8
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Scene
   m_RootView: {fileID: 4}
-  m_MinSize: {x: 875, y: 371}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -43,8 +43,8 @@ MonoBehaviour:
     y: 0
     width: 257.59998
     height: 832
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 37128
+  controlID: 32
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -97,7 +97,7 @@ MonoBehaviour:
     y: 0
     width: 2048
     height: 1068.8
-  m_MinSize: {x: 875, y: 371}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 94
+  controlID: 95
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 37127
+  controlID: 31
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -340,7 +340,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 62.19995}
     m_SelectedIDs: 1a060000
     m_LastClickedID: 1562
-    m_ExpandedIDs: 000000001a06000000ca9a3b
+    m_ExpandedIDs: 000000005e5d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -368,7 +368,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001a060000
+    m_ExpandedIDs: 000000005e5d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -832,9 +832,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 803.6383, y: 446.63602, z: 692.0754}
+    m_Target: {x: 906.35315, y: 515.7885, z: 697.0013}
     speed: 2
-    m_Value: {x: 803.6383, y: 446.63602, z: 692.0754}
+    m_Value: {x: 906.35315, y: 515.7885, z: 697.0013}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -880,9 +880,9 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.020802312, y: -0.033353727, z: 0.0070466422, w: 1.0010461}
+    m_Target: {x: -0.0006181284, y: -0.0010463921, z: 0.0063465103, w: 1.0018221}
     speed: 2
-    m_Value: {x: 0.020764057, y: -0.03329239, z: 0.0070336834, w: 0.9992052}
+    m_Value: {x: -0.0006093893, y: 0.00015549011, z: 0.006335572, w: 0.9999798}
   m_Size:
     m_Target: 1128.1576
     speed: 2
@@ -933,7 +933,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 73.6
-    width: 1652.6
+    width: 1395
     height: 811
   m_SerializedDataModeController:
     m_DataMode: 0
@@ -987,23 +987,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 1652.6
+      width: 1395
       height: 790
-    m_Scale: {x: 0.9143519, y: 0.9143519}
-    m_Translation: {x: 826.3, y: 395}
+    m_Scale: {x: 0.9082031, y: 0.9082031}
+    m_Translation: {x: 697.5, y: 395}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -903.7002
-      y: -432
-      width: 1807.4004
-      height: 864
+      x: -768
+      y: -434.92474
+      width: 1536
+      height: 869.8495
     m_MinimalGUI: 1
-  m_defaultScale: 0.9143519
-  m_LastWindowPixelSize: {x: 2065.75, y: 1013.75}
+  m_defaultScale: 0.9082031
+  m_LastWindowPixelSize: {x: 1743.75, y: 1013.75}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 00000000000000000000
@@ -1064,14 +1064,14 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: 71
-  m_LastProjectPath: C:\Users\yagiz\Desktop\Game Files\Unity Projects\Nature-Simulation-Game\Nature-Simulation-Game
+  m_LastProjectPath: C:\Users\yagiz\Desktop\Game Files\Unity Projects\Nature-Simulation-Game
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 79}
-    m_SelectedIDs: 1a060000
-    m_LastClickedID: 1562
-    m_ExpandedIDs: 000000001a0600006a06000000ca9a3b
+    m_SelectedIDs: 5e5d0000
+    m_LastClickedID: 23902
+    m_ExpandedIDs: 000000005e5d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1099,7 +1099,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001a060000
+    m_ExpandedIDs: 000000005e5d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1261,9 +1261,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: 765d0000
       m_LastClickedID: 0
-      m_ExpandedIDs: c602f4ff1022f4ff4a23f4ffde47f4ffdc27feff0efcfeff0afdfeff7e00ffff8e00ffffac02ffff0e03ffff7a03ffff9605ffffbc29ffffdc880000e0880000d2890000288d00008e9000001c91000072130100ca1a0100d41a0100321b0100c81b01000a1c01009e1f0100a4240100ae2401000c250100a2250100
+      m_ExpandedIDs: 28f9ffff5efaffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
