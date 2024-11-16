@@ -12,7 +12,6 @@ public class BakeNavmesh : MonoBehaviour
         if (generate_navmesh == true)
         {
             Invoke(nameof(GenerateNavmesh), 0.1f); // call the GenerateNavmesh method after a short delay to ensure the terrain is fully generated first
-            Debug.Log("info - navmesh generated successfully");
         }
     }
 
@@ -32,6 +31,6 @@ public class BakeNavmesh : MonoBehaviour
         navmesh_surface.RemoveData();
         navmesh_surface.BuildNavMesh();
 
-        Debug.Log("info - navmesh baked successfully");
+        Debug.Log("Info - navmesh baked successfully");
     }
 }

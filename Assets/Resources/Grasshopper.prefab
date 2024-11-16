@@ -9,10 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2996278540194161837}
-  - component: {fileID: 731285060116120889}
   m_Layer: 0
   m_Name: Grasshopper
-  m_TagString: Untagged
+  m_TagString: Grasshopper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,18 +32,6 @@ Transform:
   - {fileID: 9110908298307917116}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &731285060116120889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 538437904605431303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9715d348a969284c9b114ea40ff308c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4629536998018963686
 GameObject:
   m_ObjectHideFlags: 0
@@ -54,10 +41,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9110908298307917116}
+  - component: {fileID: 1244314751858573427}
+  - component: {fileID: 6083089692286442799}
   - component: {fileID: 7355407649541843333}
+  - component: {fileID: 4511162897124740519}
   m_Layer: 0
   m_Name: grasshoppa
-  m_TagString: Untagged
+  m_TagString: Grasshopper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -77,6 +67,44 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2996278540194161837}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1244314751858573427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629536998018963686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d53925eb43038ce4d994a9c849bf39bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hungerThreshold: 50
+  baseSearchFoodRange: 15
+  searchFoodRange: 50
+  wanderRange: 25
+--- !u!195 &6083089692286442799
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629536998018963686}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.12
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.11
+  m_BaseOffset: 0.14
+  m_WalkableMask: 5
+  m_ObstacleAvoidanceType: 4
 --- !u!212 &7355407649541843333
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -129,3 +157,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4511162897124740519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629536998018963686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9715d348a969284c9b114ea40ff308c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

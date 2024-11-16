@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3809569856966489128}
   - component: {fileID: 5870854909732304670}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: Grass
   m_TagString: Vegetation
   m_Icon: {fileID: 0}
@@ -55,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8794562286958827149}
   - component: {fileID: 1675786188734238700}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: grass
   m_TagString: Grass
   m_Icon: {fileID: 0}

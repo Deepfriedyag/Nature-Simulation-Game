@@ -64,7 +64,7 @@
     <Compile Include="Assets\Scripts\SaveGameHandler.cs" />
     <Compile Include="Assets\Scripts\CameraMovement.cs" />
     <Compile Include="Assets\Scripts\Map Generation\MapDisplay.cs" />
-    <Compile Include="Assets\Scripts\Menus\SpawnUI.cs" />
+    <Compile Include="Assets\Scripts\Animal AI\AnimalAI.cs" />
     <Compile Include="Assets\Scripts\Menus\ObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\Map Generation\MapGenerator.cs" />
     <Compile Include="Assets\Scripts\Map Generation\MeshGenerator.cs" />
@@ -75,8 +75,10 @@
     <Compile Include="Assets\Scripts\Map Generation\Noise.cs" />
     <Compile Include="Assets\Scripts\Map Generation\PlaceVegetation.cs" />
     <Compile Include="Assets\Scripts\Map Generation\BakeNavmesh.cs" />
+    <Compile Include="Assets\Scripts\Menus\SpawnMenu.cs" />
     <Compile Include="Assets\Scripts\Menus\ConfigMenu.cs" />
     <Compile Include="Assets\Scripts\Menus\IngameConsole.cs" />
+    <Compile Include="Assets\Scripts\Animal AI\GrasshopperAI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

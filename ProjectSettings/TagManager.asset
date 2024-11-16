@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Vegetation
+  - Grass
+  - Tree
+  - Wolf
+  - Fox
+  - Grasshopper
   layers:
   - Default
   - TransparentFX
@@ -33,9 +38,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - Prey
+  - Predator
+  - Grass
   - Tree
   - Ground
   m_SortingLayers:

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SpawnUI : MonoBehaviour
+public class SpawnMenu : MonoBehaviour
 {
     [SerializeField] private GameObject spawn_ui;
     private bool is_ui_open = false;
@@ -15,25 +15,25 @@ public class SpawnUI : MonoBehaviour
         // Toggle the UI on and off with the E key
         if (Input.GetKeyDown(KeyCode.E))
         {
-            ToggleUI();
+            ToggleMenu();
         }
     }
 
-    public void ToggleUI()
+    public void ToggleMenu()
     {
         is_ui_open = !is_ui_open;
 
         if (is_ui_open)
         {
-            OpenUI();
+            OpenMenu();
         }
         else
         {
-            CloseUI();
+            CloseMenu();
         }
     }
 
-    public void OpenUI()
+    public void OpenMenu()
     {
         Time.timeScale = 0; // pause the game
         spawn_ui.SetActive(true);
@@ -41,12 +41,14 @@ public class SpawnUI : MonoBehaviour
         Cursor.visible = true;
     }
 
-    public void CloseUI()
+    public void CloseMenu()
     {
         Time.timeScale = 1; // unpause the game
         spawn_ui.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
+    // ADD SPEEDING UP GAMETIME HERE []
 
 }

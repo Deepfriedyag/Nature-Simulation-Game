@@ -7,8 +7,8 @@ public class SaveGameHandler : MonoBehaviour
     [SerializeField] private Dictionary<string, GameObject> object_prefabs = new Dictionary<string, GameObject>();
     // DO THE ABOVE FOR ANIMALS LATER []
 
-    [SerializeField] private Transform spawned_object_parent;
- 
+    [SerializeField] private Transform spawned_object_parent; // parent object to hold all the spawned gameobjects
+
     private void Awake() // awake is a reserved Unity method that is run when the script is first loaded
     {
         // map saved names to actual prefab names
