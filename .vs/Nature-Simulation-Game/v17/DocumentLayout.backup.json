@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\map generation\\spreadvegetation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\map generation\\spreadvegetation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|c:\\users\\yagiz\\desktop\\game files\\unity projects\\nature-simulation-game\\assets\\scripts\\animal ai\\grasshopperai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\animal ai\\grasshopperai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\animal ai\\animalai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\animal ai\\animalai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\animal ai\\grasshopperai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\animal ai\\grasshopperai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\savegamehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\savegamehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\menus\\objectspawner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,16 +39,8 @@
       "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\map generation\\meshgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\savegamehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\savegamehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\spritebillboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\spritebillboard.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\map generation\\spreadvegetation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\map generation\\spreadvegetation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{17CA1621-16AB-C83E-B4CC-A89EEB6FF701}|Assembly-CSharp.csproj|C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\assets\\scripts\\cameramovement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -89,17 +89,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "AnimalAI.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Animal AI\\AnimalAI.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Animal AI\\AnimalAI.cs",
               "ToolTip": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Animal AI\\AnimalAI.cs",
               "RelativeToolTip": "Assets\\Scripts\\Animal AI\\AnimalAI.cs",
-              "ViewState": "AgIAAKoAAAAAAAAAAAAqwMAAAAAxAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAiwPoAAABIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-12T16:21:40.31Z",
               "IsPinned": true,
@@ -113,7 +113,7 @@
               "RelativeDocumentMoniker": "Assets\\Scripts\\Animal AI\\GrasshopperAI.cs",
               "ToolTip": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Animal AI\\GrasshopperAI.cs",
               "RelativeToolTip": "Assets\\Scripts\\Animal AI\\GrasshopperAI.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAswEsAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHUAAABNAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-12T16:46:28.861Z",
               "IsPinned": true,
@@ -121,20 +121,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "SaveGameHandler.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\SaveGameHandler.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SaveGameHandler.cs",
               "ToolTip": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\SaveGameHandler.cs",
               "RelativeToolTip": "Assets\\Scripts\\SaveGameHandler.cs",
-              "ViewState": "AgIAACsAAAAAAAAAAAAWwEIAAABsAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGMAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-24T22:29:57.655Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "IngameConsole.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Menus\\IngameConsole.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Menus\\IngameConsole.cs",
@@ -159,7 +159,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "ObjectSpawner.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Menus\\ObjectSpawner.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Menus\\ObjectSpawner.cs",
@@ -219,7 +219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "SpriteBillboard.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\SpriteBillboard.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SpriteBillboard.cs",
@@ -227,20 +227,20 @@
               "RelativeToolTip": "Assets\\Scripts\\SpriteBillboard.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T22:29:58.418Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-24T22:29:58.418Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 0,
               "Title": "SpreadVegetation.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Map Generation\\SpreadVegetation.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Map Generation\\SpreadVegetation.cs",
               "ToolTip": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Map Generation\\SpreadVegetation.cs",
               "RelativeToolTip": "Assets\\Scripts\\Map Generation\\SpreadVegetation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAA/AAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwBQAAACWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T22:29:53.186Z"
+              "WhenOpened": "2024-10-24T22:29:53.186Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -268,7 +268,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "SpawnMenu.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Menus\\SpawnMenu.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Menus\\SpawnMenu.cs",
@@ -293,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "MeshGenerator.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Map Generation\\MeshGenerator.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Map Generation\\MeshGenerator.cs",
@@ -330,7 +330,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "BakeNavmesh.cs",
               "DocumentMoniker": "C:\\Users\\yagiz\\Desktop\\Game Files\\Unity Projects\\Nature-Simulation-Game\\Assets\\Scripts\\Map Generation\\BakeNavmesh.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Map Generation\\BakeNavmesh.cs",

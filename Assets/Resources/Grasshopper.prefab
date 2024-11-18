@@ -79,10 +79,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53925eb43038ce4d994a9c849bf39bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hungerThreshold: 50
+  hungerThreshold: 80
   baseSearchFoodRange: 15
+  maxHealth: 100
+  healthDecayRate: 5
   searchFoodRange: 50
-  wanderRange: 25
+  eatRange: 0.5
+  wanderRange: 10
+  huntSpeed: 2
+  wanderSpeed: 1
 --- !u!195 &6083089692286442799
 NavMeshAgent:
   m_ObjectHideFlags: 0

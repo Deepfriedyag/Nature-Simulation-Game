@@ -126,10 +126,11 @@ public abstract class AnimalAI : MonoBehaviour
             currentHunger = 0;
             currentHealth -= healthDecayRate * Time.deltaTime;
 
-            if (currentHealth <= 0 && !isDead)
+            if (currentHealth <= 0)
             {
-                Die("health depletion");
+                Die("Starvation");
             }
+                
         }
     }
 
