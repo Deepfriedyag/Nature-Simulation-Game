@@ -7,11 +7,6 @@ public class GrasshopperAI : AnimalAI
     [SerializeField] private float eatRange = 2f;        // Distance within which grass can be eaten
     [SerializeField] private float wanderRange = 5f;     // Range for wandering
 
-    [SerializeField] private float huntSpeed = 4f;       // Speed during hunting
-    [SerializeField] private float wanderSpeed = 2f;     // Speed during wandering
-
-    private bool hasQueuedWander = false;                // Prevent multiple wander tasks
-
     protected override float SearchFoodRange => searchFoodRange;
 
     private void OnDrawGizmosSelected()
@@ -23,12 +18,16 @@ public class GrasshopperAI : AnimalAI
         // Visualize the eatRange in the Scene view
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, eatRange);
+
+        // Visualize predator detection range
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
     }
 
     protected override void Wander()
     {
-        isIdle = false;
-        agent.speed = wanderSpeed; // Set speed for wandering
+        isIdle = false; // The animal is no longer idle
+
         Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
         randomDirection += transform.position;
         NavMeshHit hit;
@@ -36,16 +35,15 @@ public class GrasshopperAI : AnimalAI
         if (NavMesh.SamplePosition(randomDirection, out hit, wanderRange, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
-            Debug.Log($"{gameObject.name} is wandering to a new location.");
+            Debug.Log($"{gameObject.name} is wandering to a new location within range: {wanderRange}.");
         }
-
-        // Reset the wander queue flag after the task is scheduled
-        hasQueuedWander = false;
     }
+
 
     protected override void SearchForFood()
     {
-        agent.speed = huntSpeed; // Set speed for hunting
+        if (currentState != State.Hunt) return; // Ensure the grasshopper is locked in the Hunt state
+
         Collider[] foodItems = Physics.OverlapSphere(transform.position, SearchFoodRange, LayerMask.GetMask("Grass"));
         GameObject nearestFood = null;
         float closestDistance = Mathf.Infinity;
@@ -55,8 +53,7 @@ public class GrasshopperAI : AnimalAI
         {
             float distance = Vector3.Distance(transform.position, food.transform.position);
 
-            // Find the closest NavMesh point to the grass object
-            if (NavMesh.SamplePosition(food.transform.position, out NavMeshHit navHit, 1f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(food.transform.position, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
             {
                 if (distance < closestDistance)
                 {
@@ -71,52 +68,77 @@ public class GrasshopperAI : AnimalAI
         {
             target = nearestFood.transform;
             agent.SetDestination(closestNavMeshPoint);
-            Debug.Log($"{gameObject.name} is moving to grass: {nearestFood.name}, located at {closestDistance} units.");
-            ScheduleTask(State.Eat, 20f); // Add Eat task to follow Hunt
+            Debug.Log($"{gameObject.name} is hunting for grass: {nearestFood.name}.");
+
+            // Use Physics.CheckSphere to determine if the food is within eatRange
+            bool isInEatingRange = Physics.CheckSphere(transform.position, eatRange, LayerMask.GetMask("Grass"));
+
+            if (isInEatingRange)
+            {
+                Debug.Log($"{gameObject.name} is in eating range of grass: {nearestFood.name}. Scheduling Eat task.");
+                ScheduleTask(State.Eat, 20f);
+            }
         }
-        else if (!hasQueuedWander && agent.remainingDistance <= 0.1f && !agent.pathPending)
+        else if (!IsTaskScheduled(State.Wander))
         {
-            // Queue a high-priority Wander task only after reaching the destination
-            Debug.Log($"{gameObject.name} found no grass. Queuing a wandering task to search...");
-            ScheduleTask(State.Wander, 30f); // Higher priority than SearchForFood
-            hasQueuedWander = true;
+            // If no grass is found, transition to Wander
+            Debug.Log($"{gameObject.name} found no grass. Switching to Wander.");
+            ScheduleTask(State.Wander, 30f);
         }
+
     }
 
     protected override void Eat()
     {
-        if (target != null && Vector3.Distance(transform.position, target.position) <= eatRange)
+        try
         {
+            if (target == null)
+            {
+                throw new System.Exception("Target is null. Unable to eat grass.");
+            }
+
+            Debug.Log($"{gameObject.name} is eating grass: {target.name}.");
+
             // Destroy the grass object
             Destroy(target.gameObject);
 
             // Restore hunger
             currentHunger = Mathf.Min(currentHunger + 20f, MaxHunger);
-            Debug.Log($"{gameObject.name} ate grass: {target.name} and restored hunger.");
 
+            // Reset the target and schedule Idle
             target = null;
+            ScheduleTask(State.Idle, 1f);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"{gameObject.name} encountered an error while eating: {ex.Message}. Rescheduling Hunt.");
+            // Reschedule Hunt task if something goes wrong
+            ScheduleTask(State.Hunt, 10f);
+        }
+    }
+
+    protected override void Flee()
+    {
+        if (target != null && currentStamina > 0)
+        {
+            // Move away from the predator
+            Vector3 fleeDirection = (transform.position - target.position).normalized * 10f;
+            NavMeshHit hit;
+
+            if (NavMesh.SamplePosition(transform.position + fleeDirection, out hit, 10f, NavMesh.AllAreas))
+            {
+                agent.SetDestination(hit.position);
+                Debug.Log($"{gameObject.name} is fleeing from a predator: {target.name}.");
+            }
         }
         else
         {
-            Debug.Log($"{gameObject.name} is not within eating range of the grass.");
+            // If stamina is depleted, move slowly
+            agent.speed *= lowStaminaSpeedMultiplier;
         }
 
-        // After eating, queue Idle task if none exists
-        if (!IsTaskScheduled(State.Idle))
-        {
-            ScheduleTask(State.Idle, 1f);
-        }
+        // After fleeing, return to idle when stamina regenerates
+        ScheduleTask(State.Idle, 1f);
     }
 
-    protected override void Idle()
-    {
-        isIdle = true;
-
-        // Prevent multiple idle tasks
-        if (!IsTaskScheduled(State.Idle))
-        {
-            Debug.Log($"{gameObject.name} is idle. Scheduling Wander task.");
-            ScheduleTask(State.Wander, 1f);
-        }
-    }
 }

@@ -1,14 +1,28 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System.Reflection;
 
 public abstract class AnimalAI : MonoBehaviour
 {
-    [SerializeField] private float hungerThreshold = 50f; // Hunger % threshold to start hunting
-    [SerializeField, HideInInspector] private float baseSearchFoodRange = 15f;
+    [Header("Health and Hunger")]
+    [SerializeField] protected float maxHealth = 100f; // Maximum health
+    [SerializeField] protected float healthDecayRate = 5f; // Health decay rate per second when hunger is zero
+    [SerializeField] protected float hungerThreshold = 50f; // Hunger % threshold to start hunting
+    [SerializeField, HideInInspector] protected float baseSearchFoodRange = 15f;
 
-    [SerializeField] private float maxHealth = 100f; // Maximum health
-    [SerializeField] private float healthDecayRate = 5f; // Health decay rate per second when hunger is zero
+    [Header("Stamina")]
+    [SerializeField] protected float maxStamina = 100f; // Maximum stamina
+    [SerializeField] protected float staminaRegenRate = 1f; // Stamina regeneration rate per second
+    [SerializeField] protected float staminaDrainRate = 5f; // Stamina drain rate per second while moving
+    [SerializeField] protected float lowStaminaSpeedMultiplier = 0.5f; // Speed multiplier when stamina is low
+
+    [Header("Predator Detection")]
+    [SerializeField] protected float predatorDetectionRange = 10f; // Detection range for predators
+    [SerializeField] protected List<string> predatorTags = new List<string>(); // List of predator tags
+
+    protected bool destinationReached => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
+    protected float currentStamina;
 
     protected virtual float SearchFoodRange => baseSearchFoodRange;
     protected virtual float MaxHunger => 100f;
@@ -81,6 +95,7 @@ public abstract class AnimalAI : MonoBehaviour
     protected virtual void Start()
     {
         currentHunger = MaxHunger;
+        currentStamina = maxStamina;
         currentHealth = maxHealth;
         agent = GetComponent<NavMeshAgent>();
         taskQueue = new PriorityQueue();
@@ -95,6 +110,8 @@ public abstract class AnimalAI : MonoBehaviour
         if (isDead) return;
 
         AgeAndHungerDecay();
+        ManageStamina();
+        DetectPredators();
         ProcessTaskQueue();
 
         // Handle idle state logic
@@ -108,6 +125,10 @@ public abstract class AnimalAI : MonoBehaviour
                 ScheduleTask(State.Wander, 1f);
                 idleTimer = 0f;
             }
+        }
+        else if (taskQueue.GetAllTasks().Count == 0)
+        {
+            ScheduleTask(State.Idle, 1f); // Return to Idle state if no tasks are left
         }
 
         // Schedule a Hunt task if hunger falls below the threshold
@@ -134,6 +155,44 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
+    private void ManageStamina()
+    {
+        if (agent.velocity.sqrMagnitude > 0.1f) // If the animal is moving
+        {
+            // Only drain stamina when in Hunt or Flee states
+            if (currentState == State.Hunt || currentState == State.Flee)
+            {
+                currentStamina -= staminaDrainRate * Time.deltaTime;
+            }
+
+            if (currentStamina <= 0)
+            {
+                currentStamina = 0;
+                agent.speed *= lowStaminaSpeedMultiplier; // Reduce speed when stamina is depleted
+            }
+        }
+        else // If the animal is idle or not in stamina-draining states
+        {
+            currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
+        }
+    }
+
+
+    private void DetectPredators()
+    {
+        Collider[] detectedObjects = Physics.OverlapSphere(transform.position, predatorDetectionRange);
+        foreach (var detected in detectedObjects)
+        {
+            if (predatorTags.Contains(detected.tag))
+            {
+                Debug.Log($"{gameObject.name} detected a predator: {detected.name}!");
+                ScheduleTask(State.Flee, 50f); // Flee tasks have the highest priority
+                target = detected.transform;
+                return;
+            }
+        }
+    }
+
     protected abstract void SearchForFood();
 
     protected void Die(string cause)
@@ -146,6 +205,7 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected void ScheduleTask(State state, float priority)
     {
+        Debug.Log($"{gameObject.name} scheduling task: {state} with priority {priority}");
         taskQueue.Enqueue(new Task(state, priority));
     }
 
@@ -162,7 +222,7 @@ public abstract class AnimalAI : MonoBehaviour
     {
         if (taskQueue.Count == 0 && currentState != State.Idle)
         {
-            // Return to Idle state if no tasks are left
+            Debug.Log($"{gameObject.name} has no tasks. Transitioning to Idle.");
             currentState = State.Idle;
             isIdle = true;
             return;
@@ -170,9 +230,18 @@ public abstract class AnimalAI : MonoBehaviour
 
         if (taskQueue.Count > 0)
         {
+            // Only switch states if the current task is complete or not movement-based
+            if ((currentState == State.Wander && !destinationReached) ||
+                (currentState == State.Flee && !destinationReached))
+            {
+                return; // Do not dequeue the next task until the current movement task is done
+            }
+
             Task nextTask = taskQueue.Dequeue();
+            Debug.Log($"{gameObject.name} is switching to {nextTask.state} state.");
+
             currentState = nextTask.state;
-            idleTimer = 0f; // Reset the idle timer when a task is executed
+            idleTimer = 0f;
 
             switch (currentState)
             {
@@ -195,6 +264,7 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
+
     protected virtual void Idle()
     {
         isIdle = true;
@@ -210,9 +280,6 @@ public abstract class AnimalAI : MonoBehaviour
         {
             agent.SetDestination(hit.position);
         }
-
-        // Once wandering is complete, return to idle
-        ScheduleTask(State.Idle, 1f);
     }
 
     protected virtual void Flee()
@@ -232,7 +299,7 @@ public abstract class AnimalAI : MonoBehaviour
         ScheduleTask(State.Idle, 1f); // After eating, return to idle
     }
 
-    // Enhanced Debug Overlay
+    // Debug Overlay
     private void OnGUI()
     {
         if (Time.timeScale == 0) return; // Do not render debug info when paused
@@ -244,10 +311,11 @@ public abstract class AnimalAI : MonoBehaviour
             style.normal.textColor = Color.white;
             style.fontSize = 14;
 
-            // Display current state, hunger, health, idle timer, and task queue
+            // Build the debug text with proper formatting and spacing
             string debugText = $"State: {currentState}\n" +
                                $"Hunger: {currentHunger:F1}/{MaxHunger}\n" +
                                $"Health: {currentHealth:F1}/{maxHealth}\n" +
+                               $"Stamina: {currentStamina:F1}/{maxStamina}\n" +
                                $"Idle Timer: {idleTimer:F1}/{wanderDelay} seconds\n" +
                                $"Task Queue: {taskQueue.Count} tasks\n";
 
@@ -258,7 +326,9 @@ public abstract class AnimalAI : MonoBehaviour
                 debugText += $"  - {task.state} (Priority: {task.priority})\n";
             }
 
-            GUI.Label(new Rect(screenPosition.x, Screen.height - screenPosition.y, 200, 100), debugText, style);
+            // Display the text
+            GUI.Label(new Rect(screenPosition.x, Screen.height - screenPosition.y, 200, 200), debugText, style);
         }
     }
+
 }
