@@ -5,7 +5,6 @@ public class GrasshopperAI : AnimalAI
 {
     [SerializeField] private float searchFoodRange = 10f; // Grasshopper-specific range for detecting food
     [SerializeField] private float eatRange = 2f;        // Distance within which grass can be eaten
-    [SerializeField] private float wanderRange = 5f;     // Range for wandering
 
     protected override float SearchFoodRange => searchFoodRange;
 
@@ -23,22 +22,6 @@ public class GrasshopperAI : AnimalAI
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
     }
-
-    protected override void Wander()
-    {
-        isIdle = false; // The animal is no longer idle
-
-        Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-
-        if (NavMesh.SamplePosition(randomDirection, out hit, wanderRange, NavMesh.AllAreas))
-        {
-            agent.SetDestination(hit.position);
-            Debug.Log($"{gameObject.name} is wandering to a new location within range: {wanderRange}.");
-        }
-    }
-
 
     protected override void SearchForFood()
     {

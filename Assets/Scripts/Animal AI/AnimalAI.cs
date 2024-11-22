@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using System.Reflection;
 
 public abstract class AnimalAI : MonoBehaviour
 {
@@ -20,6 +19,8 @@ public abstract class AnimalAI : MonoBehaviour
     [Header("Predator Detection")]
     [SerializeField] protected float predatorDetectionRange = 10f; // Detection range for predators
     [SerializeField] protected List<string> predatorTags = new List<string>(); // List of predator tags
+
+    [SerializeField] protected float wanderRange = 5f; // Range for wandering
 
     protected bool destinationReached => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
     protected float currentStamina;
@@ -50,8 +51,11 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected State currentState;
 
-    private float idleTimer = 0f; // Timer to track how long the animal has been idle
-    private float wanderDelay = 3f; // Delay before scheduling a Wander task while idle
+    protected float idleTimer = 0f; // Timer to track how long the animal has been idle
+    protected float wanderDelay = 3f; // Delay before scheduling a Wander task while idle
+
+    // Time scaling multiplier based on game time
+    protected float time_multiplier => Time.timeScale;
 
     protected class Task
     {
@@ -117,7 +121,7 @@ public abstract class AnimalAI : MonoBehaviour
         // Handle idle state logic
         if (currentState == State.Idle)
         {
-            idleTimer += Time.deltaTime;
+            idleTimer += Time.deltaTime * time_multiplier;
 
             // Schedule a Wander task if idle for too long
             if (idleTimer >= wanderDelay)
@@ -140,18 +144,19 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected void AgeAndHungerDecay()
     {
-        currentHunger -= HungerDecayRate * Time.deltaTime;
+        currentHunger -= HungerDecayRate * Time.deltaTime * time_multiplier;
+
+        // ADD AGING []
 
         if (currentHunger <= 0)
         {
             currentHunger = 0;
-            currentHealth -= healthDecayRate * Time.deltaTime;
+            currentHealth -= healthDecayRate * Time.deltaTime * time_multiplier;
 
             if (currentHealth <= 0)
             {
                 Die("Starvation");
             }
-                
         }
     }
 
@@ -159,10 +164,9 @@ public abstract class AnimalAI : MonoBehaviour
     {
         if (agent.velocity.sqrMagnitude > 0.1f) // If the animal is moving
         {
-            // Only drain stamina when in Hunt or Flee states
             if (currentState == State.Hunt || currentState == State.Flee)
             {
-                currentStamina -= staminaDrainRate * Time.deltaTime;
+                currentStamina -= staminaDrainRate * Time.deltaTime * time_multiplier;
             }
 
             if (currentStamina <= 0)
@@ -171,12 +175,11 @@ public abstract class AnimalAI : MonoBehaviour
                 agent.speed *= lowStaminaSpeedMultiplier; // Reduce speed when stamina is depleted
             }
         }
-        else // If the animal is idle or not in stamina-draining states
+        else
         {
-            currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
+            currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime * time_multiplier, maxStamina);
         }
     }
-
 
     private void DetectPredators()
     {
@@ -199,7 +202,7 @@ public abstract class AnimalAI : MonoBehaviour
     {
         isDead = true;
         agent.isStopped = true;
-        Debug.Log($"{gameObject.name} has died of {cause}.");
+        IngameConsole.Instance.LogMessage($"{gameObject.name} has died from {cause}.");
         Destroy(gameObject); // Destroy the GameObject when dead
     }
 
@@ -270,13 +273,15 @@ public abstract class AnimalAI : MonoBehaviour
         isIdle = true;
     }
 
-    protected virtual void Wander()
+    protected void Wander()
     {
-        isIdle = false;
-        Vector3 randomDirection = Random.insideUnitSphere * 5f;
+        isIdle = false; // The animal is no longer idle
+
+        Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
         randomDirection += transform.position;
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(randomDirection, out hit, 5f, NavMesh.AllAreas))
+
+        if (NavMesh.SamplePosition(randomDirection, out hit, wanderRange, NavMesh.AllAreas))
         {
             agent.SetDestination(hit.position);
         }

@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthDecayRate: 5
-  hungerThreshold: 80
+  hungerThreshold: 70
   baseSearchFoodRange: 15
   maxStamina: 100
   staminaRegenRate: 1
@@ -90,9 +90,9 @@ MonoBehaviour:
   predatorDetectionRange: 15
   predatorTags:
   - Fox
+  wanderRange: 10
   searchFoodRange: 50
   eatRange: 0.5
-  wanderRange: 10
 --- !u!195 &6083089692286442799
 NavMeshAgent:
   m_ObjectHideFlags: 0

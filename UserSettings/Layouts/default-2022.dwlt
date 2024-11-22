@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2048
     height: 1068.8
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Game
   m_RootView: {fileID: 4}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Panes:
   - {fileID: 19}
   m_Selected: 0
-  m_LastSelected: 1
+  m_LastSelected: 0
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -338,8 +338,8 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 62.19995}
-    m_SelectedIDs: 485d0000
-    m_LastClickedID: 23880
+    m_SelectedIDs: 525d0000
+    m_LastClickedID: 23890
     m_ExpandedIDs: 00000000225d0000325d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -393,8 +393,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: a87bfeff
-    m_LastClickedInstanceID: -99416
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 
     m_RenameOverlay:
@@ -832,9 +832,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -142.12222, y: -160.49802, z: 78.3118}
+    m_Target: {x: -451.70038, y: 50.898476, z: -7.606598}
     speed: 2
-    m_Value: {x: -142.12222, y: -160.49802, z: 78.3118}
+    m_Value: {x: -451.70038, y: 50.898476, z: -7.606598}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -880,13 +880,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.2639769, y: 0.5428785, z: -0.18018566, w: 0.7793768}
+    m_Target: {x: 0.32970658, y: 0.4564505, z: -0.18536174, w: 0.80812764}
     speed: 2
-    m_Value: {x: 0.2634117, y: 0.54171616, z: -0.17979987, w: 0.7777081}
+    m_Value: {x: 0.32897004, y: 0.45543084, z: -0.18494767, w: 0.8063224}
   m_Size:
-    m_Target: 486.68005
+    m_Target: 61.564102
     speed: 2
-    m_Value: 465.72253
+    m_Value: 61.564102
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -978,7 +978,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 1
+    m_EnableMouseInput: 0
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -1263,7 +1263,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: a87bfeffc67bfeff30fbffff425c0000465c0000
+      m_ExpandedIDs: eed8feff4a78ffffa478fffffe78ffff7c79ffff30fbffff685a0000525b00006e5b00009e5b0000d85b0000425c0000465c0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
