@@ -35,7 +35,6 @@ public abstract class AnimalAI : MonoBehaviour
     protected Transform target;
 
     protected bool isDead = false;
-    protected bool isIdle = true;
 
     protected PriorityQueue taskQueue;
 
@@ -160,7 +159,7 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
-    private void ManageStamina()
+    protected void ManageStamina()
     {
         if (agent.velocity.sqrMagnitude > 0.1f) // If the animal is moving
         {
@@ -181,17 +180,17 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
-    private void DetectPredators()
+    protected void DetectPredators()
     {
         Collider[] detectedObjects = Physics.OverlapSphere(transform.position, predatorDetectionRange);
         foreach (var detected in detectedObjects)
         {
             if (predatorTags.Contains(detected.tag))
             {
-                Debug.Log($"{gameObject.name} detected a predator: {detected.name}!");
-                ScheduleTask(State.Flee, 50f); // Flee tasks have the highest priority
                 target = detected.transform;
-                return;
+
+                if (IsTaskScheduled(State.Flee)) return; // Do not schedule another Flee task if already fleeing
+                else ScheduleTask(State.Flee, 50f); // Flee tasks have the highest priority
             }
         }
     }
@@ -227,7 +226,6 @@ public abstract class AnimalAI : MonoBehaviour
         {
             Debug.Log($"{gameObject.name} has no tasks. Transitioning to Idle.");
             currentState = State.Idle;
-            isIdle = true;
             return;
         }
 
@@ -241,7 +239,6 @@ public abstract class AnimalAI : MonoBehaviour
             }
 
             Task nextTask = taskQueue.Dequeue();
-            Debug.Log($"{gameObject.name} is switching to {nextTask.state} state.");
 
             currentState = nextTask.state;
             idleTimer = 0f;
@@ -270,13 +267,11 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected virtual void Idle()
     {
-        isIdle = true;
+
     }
 
     protected void Wander()
     {
-        isIdle = false; // The animal is no longer idle
-
         Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
         randomDirection += transform.position;
         NavMeshHit hit;
@@ -289,23 +284,36 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected virtual void Flee()
     {
-        if (target == null) return;
-
-        Vector3 fleeDirection = (transform.position - target.position).normalized * 10f;
-        agent.SetDestination(transform.position + fleeDirection);
-
-        target = null;
-        isIdle = true;
+        if (target == null && !IsTaskScheduled(State.Idle))
+        {
+            ScheduleTask(State.Idle, 1f);
+        }
+        else
+        {
+            Vector3 fleeDirection = (transform.position - target.position).normalized * 10f;
+            agent.SetDestination(transform.position + fleeDirection);
+            target = null;
+        }
     }
 
     protected virtual void Eat()
     {
         currentHunger = Mathf.Min(currentHunger + 20f, MaxHunger);
-        ScheduleTask(State.Idle, 1f); // After eating, return to idle
+
+        if (IsTaskScheduled(State.Idle))
+        {
+            Debug.Log("Idle task already scheduled. returned from eat");
+            return;
+            
+        }
+        else 
+        {
+            ScheduleTask(State.Idle, 1f);
+        }
     }
 
     // Debug Overlay
-    private void OnGUI()
+    protected void OnGUI()
     {
         if (Time.timeScale == 0) return; // Do not render debug info when paused
 
@@ -314,7 +322,7 @@ public abstract class AnimalAI : MonoBehaviour
         {
             GUIStyle style = new GUIStyle();
             style.normal.textColor = Color.white;
-            style.fontSize = 14;
+            style.fontSize = 11;
 
             // Build the debug text with proper formatting and spacing
             string debugText = $"State: {currentState}\n" +
@@ -332,7 +340,7 @@ public abstract class AnimalAI : MonoBehaviour
             }
 
             // Display the text
-            GUI.Label(new Rect(screenPosition.x, Screen.height - screenPosition.y, 200, 200), debugText, style);
+            GUI.Label(new Rect((screenPosition.x - 25), (Screen.height - screenPosition.y - 125), 200, 200), debugText, style);
         }
     }
 

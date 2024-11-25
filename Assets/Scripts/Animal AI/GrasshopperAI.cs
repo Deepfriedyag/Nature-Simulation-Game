@@ -111,7 +111,6 @@ public class GrasshopperAI : AnimalAI
             if (NavMesh.SamplePosition(transform.position + fleeDirection, out hit, 10f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
-                Debug.Log($"{gameObject.name} is fleeing from a predator: {target.name}.");
             }
         }
         else

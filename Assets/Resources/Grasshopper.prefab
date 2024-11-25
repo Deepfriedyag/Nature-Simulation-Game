@@ -87,11 +87,11 @@ MonoBehaviour:
   staminaRegenRate: 1
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
-  predatorDetectionRange: 15
+  predatorDetectionRange: 5
   predatorTags:
   - Fox
   wanderRange: 10
-  searchFoodRange: 50
+  searchFoodRange: 25
   eatRange: 0.5
 --- !u!195 &6083089692286442799
 NavMeshAgent:

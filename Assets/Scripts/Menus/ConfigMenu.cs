@@ -12,7 +12,7 @@ public class ConfigMenu : MonoBehaviour
     // Available Resolutions
     private Resolution[] resolutions;
 
-    void Start()
+    private void Start()
     {
         // Set volume slider
         volume.value = PlayerPrefs.GetFloat("volume", 1f); // playerprefs is used to store player data between game sessions

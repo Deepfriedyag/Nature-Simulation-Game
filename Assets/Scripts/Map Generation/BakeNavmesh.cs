@@ -5,7 +5,7 @@ using Unity.AI.Navigation;
 public class BakeNavmesh : MonoBehaviour
 {
     [SerializeField] private NavMeshSurface navmesh_surface;
-    [SerializeField] private bool generate_navmesh; // I can set this to true or false in the unity editor
+    [SerializeField] private bool generate_navmesh; // I can set this to true or false in the unity editor. Good for debugging
 
     private void Start() // called once when the script is first loaded
     {

@@ -646,7 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00efb619f27a5514eacb8321b6f254e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawned_object_parent: {fileID: 2018563298}
+  spawned_object_parent: {fileID: 1664367345}
 --- !u!114 &154331798
 MonoBehaviour:
   m_ObjectHideFlags: 0
