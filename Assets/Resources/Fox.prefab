@@ -10,9 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 3573604082069766392}
   - component: {fileID: 8503184332937378728}
+  - component: {fileID: 707036788549456462}
+  - component: {fileID: 2764492398453832893}
   - component: {fileID: 8197349231914259277}
-  m_Layer: 0
-  m_Name: foxy fox
+  - component: {fileID: 4326929317378245284}
+  m_Layer: 26
+  m_Name: fox
   m_TagString: Fox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -85,6 +88,57 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &707036788549456462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5775369687225757180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4a97a296441c2948b93d552a70f9a93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthDecayRate: 5
+  MaxHunger: 100
+  HungerDecayRate: 1
+  hungerThreshold: 50
+  SearchFoodRange: 15
+  eatRange: 0.16
+  maxStamina: 100
+  staminaRegenRate: 1
+  staminaDrainRate: 5
+  lowStaminaSpeedMultiplier: 0.5
+  maxAge: 100
+  agingRate: 0.1
+  predatorDetectionRange: 5
+  predatorTags: []
+  wanderRange: 5
+  wanderDelay: 3
+--- !u!195 &2764492398453832893
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5775369687225757180}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.08
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.2
+  m_BaseOffset: 0.12
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &8197349231914259277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +151,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9715d348a969284c9b114ea40ff308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &4326929317378245284
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5775369687225757180}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.25
+  m_Center: {x: 0, y: -0.08, z: 0}
 --- !u!1 &6533730962555232937
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,8 +181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2768963028771700207}
-  - component: {fileID: 8405959755999189194}
-  m_Layer: 0
+  m_Layer: 26
   m_Name: Fox
   m_TagString: Fox
   m_Icon: {fileID: 0}
@@ -130,24 +204,3 @@ Transform:
   - {fileID: 3573604082069766392}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8405959755999189194
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6533730962555232937}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.35
-  m_Center: {x: 0, y: -0.44, z: 0}

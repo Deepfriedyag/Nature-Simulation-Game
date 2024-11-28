@@ -45,8 +45,9 @@ GameObject:
   - component: {fileID: 6083089692286442799}
   - component: {fileID: 7355407649541843333}
   - component: {fileID: 4511162897124740519}
+  - component: {fileID: 5092524497266203646}
   m_Layer: 0
-  m_Name: grasshoppa
+  m_Name: grasshopper
   m_TagString: Grasshopper
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,18 +82,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   healthDecayRate: 5
+  MaxHunger: 100
+  HungerDecayRate: 1
   hungerThreshold: 70
-  baseSearchFoodRange: 15
+  SearchFoodRange: 20
+  eatRange: 0.5
   maxStamina: 100
   staminaRegenRate: 1
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
+  maxAge: 100
+  agingRate: 0.1
   predatorDetectionRange: 5
   predatorTags:
   - Fox
   wanderRange: 10
-  searchFoodRange: 25
-  eatRange: 0.5
+  wanderDelay: 3
 --- !u!195 &6083089692286442799
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -103,7 +108,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.12
-  m_Speed: 3.5
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -179,3 +184,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9715d348a969284c9b114ea40ff308c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &5092524497266203646
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4629536998018963686}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.12
+  m_Center: {x: 0, y: -0.07, z: 0}

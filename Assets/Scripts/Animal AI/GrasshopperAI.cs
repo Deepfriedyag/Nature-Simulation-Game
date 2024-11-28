@@ -3,24 +3,21 @@ using UnityEngine.AI;
 
 public class GrasshopperAI : AnimalAI
 {
-    [SerializeField] private float searchFoodRange = 10f; // Grasshopper-specific range for detecting food
-    [SerializeField] private float eatRange = 2f;        // Distance within which grass can be eaten
-
-    protected override float SearchFoodRange => searchFoodRange;
-
-    private void OnDrawGizmosSelected()
+    protected override void Start()
     {
-        // Visualize the SearchFoodRange in the Scene view
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SearchFoodRange);
+        base.Start();
+        currentState = State.Idle;
+        ScheduleTask(State.Idle, 1f);
+    }
 
-        // Visualize the eatRange in the Scene view
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, eatRange);
+    protected override void Update()
+    {
+        base.Update();
+    }
 
-        // Visualize predator detection range
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
+    protected override void Idle()
+    {
+        currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
     }
 
     protected override void SearchForFood()
@@ -118,9 +115,17 @@ public class GrasshopperAI : AnimalAI
             // If stamina is depleted, move slowly
             agent.speed *= lowStaminaSpeedMultiplier;
         }
-
-        // After fleeing, return to idle when stamina regenerates
-        ScheduleTask(State.Idle, 1f);
     }
 
+    private void OnDrawGizmosSelected() // reserved Unity method. visualises the different ranges for debugging
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, SearchFoodRange);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, eatRange);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
+    }
 }
