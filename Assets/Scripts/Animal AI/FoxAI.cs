@@ -6,12 +6,9 @@ public class FoxAI : AnimalAI
     protected override void Start()
     {
         base.Start();
-        agent.speed = 4f; // Foxes are faster
+        agent.speed = 3.5f; // Foxes are faster than grasshoppers
         maxStamina = 80f; // Foxes have less stamina than grasshoppers
-        staminaRegenRate = 0.8f; // Adjust stamina regeneration rate if needed
-        currentStamina = maxStamina;
-        currentState = State.Idle;
-        ScheduleTask(State.Idle, 1f); // Start with idle state
+        staminaRegenRate = 0.8f; // Foxes regenerate stamina slower than grasshoppers
     }
 
     protected override void Update()
@@ -21,7 +18,6 @@ public class FoxAI : AnimalAI
 
     protected override void Idle()
     {
-        // Foxes regenerate stamina while idle
         currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
     }
 
@@ -67,7 +63,6 @@ public class FoxAI : AnimalAI
         else if (!IsTaskScheduled(State.Wander))
         {
             // If no prey is found, transition to Wander
-            Debug.Log($"{gameObject.name} found no grasshopper. Switching to Wander.");
             ScheduleTask(State.Wander, 30f);
         }
     }
@@ -125,15 +120,4 @@ public class FoxAI : AnimalAI
         ScheduleTask(State.Idle, 1f);
     }
 
-    private void OnDrawGizmosSelected() // Visualize detection ranges
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SearchFoodRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, eatRange);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
-    }
 }

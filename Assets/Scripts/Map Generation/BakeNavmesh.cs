@@ -5,14 +5,11 @@ using Unity.AI.Navigation;
 public class BakeNavmesh : MonoBehaviour
 {
     [SerializeField] private NavMeshSurface navmesh_surface;
-    [SerializeField] private bool generate_navmesh; // I can set this to true or false in the unity editor. Good for debugging
+    [SerializeField] private bool generate_navmesh = true; // I can set this to true or false in the unity editor. Good for debugging
 
     private void Start() // called once when the script is first loaded
     {
-        if (generate_navmesh == true)
-        {
-            Invoke(nameof(GenerateNavmesh), 0.1f); // call the GenerateNavmesh method after a short delay to ensure the terrain is fully generated first
-        }
+        if (generate_navmesh == true) Invoke(nameof(GenerateNavmesh), 0.1f); // call the GenerateNavmesh method after a short delay to ensure the terrain is fully generated first
     }
 
     public void GenerateNavmesh()

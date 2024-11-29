@@ -11,7 +11,7 @@ public class ObjectSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (selected_object != null && Input.GetMouseButtonDown(0) && Time.timeScale != 0)
+        if (Input.GetMouseButtonDown(0) && selected_object != null && Time.timeScale != 0)
         {
             SpawnObject();
         }

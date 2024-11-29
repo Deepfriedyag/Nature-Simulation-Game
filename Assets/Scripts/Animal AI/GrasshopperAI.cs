@@ -6,8 +6,6 @@ public class GrasshopperAI : AnimalAI
     protected override void Start()
     {
         base.Start();
-        currentState = State.Idle;
-        ScheduleTask(State.Idle, 1f);
     }
 
     protected override void Update()
@@ -117,15 +115,4 @@ public class GrasshopperAI : AnimalAI
         }
     }
 
-    private void OnDrawGizmosSelected() // reserved Unity method. visualises the different ranges for debugging
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SearchFoodRange);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, eatRange);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
-    }
 }

@@ -111,8 +111,13 @@ MonoBehaviour:
   staminaRegenRate: 1
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
-  maxAge: 100
-  agingRate: 0.1
+  mateRange: 4
+  mateCooldownDuration: 5
+  resultant_animal_prefab: {fileID: 6533730962555232937}
+  hungerCostForMating: 20
+  staminaCostForMating: 30
+  maxAge: 10
+  agingRate: 0.01
   predatorDetectionRange: 5
   predatorTags: []
   wanderRange: 5

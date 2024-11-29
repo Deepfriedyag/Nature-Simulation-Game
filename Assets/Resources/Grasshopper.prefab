@@ -91,8 +91,13 @@ MonoBehaviour:
   staminaRegenRate: 1
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
-  maxAge: 100
-  agingRate: 0.1
+  mateRange: 5
+  mateCooldownDuration: 120
+  resultant_animal_prefab: {fileID: 538437904605431303}
+  hungerCostForMating: 20
+  staminaCostForMating: 30
+  maxAge: 5
+  agingRate: 0.01
   predatorDetectionRange: 5
   predatorTags:
   - Fox
