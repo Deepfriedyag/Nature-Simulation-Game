@@ -100,11 +100,6 @@ public abstract class AnimalAI : MonoBehaviour
 
     private void AddAppropriateTasks()
     {
-        if (taskQueue.GetAllTasks().Count == 0)
-        {
-            ScheduleTask(State.Idle, 1f); // Return to Idle state if no tasks are left
-        }
-
         // Schedule a Hunt task if hunger falls below the threshold
         if (currentHunger / MaxHunger < hungerThreshold / 100f && !IsTaskScheduled(State.Hunt) && currentState != State.Hunt)
         {
@@ -128,6 +123,11 @@ public abstract class AnimalAI : MonoBehaviour
             ScheduleTask(State.Sleep, 5f);
         }
 
+        if (taskQueue.Count == 0)
+        {
+            ScheduleTask(State.Idle, 1f); // Return to Idle state if no tasks are left
+        }
+
     }
 
     protected virtual void SearchForMate()
@@ -144,7 +144,7 @@ public abstract class AnimalAI : MonoBehaviour
                 // Synchronize "mate" state between the two animals
                 if (currentState != State.Mate)
                 {
-                    ScheduleTask(State.Mate, 15f);
+                    ScheduleTask(State.Mate, 9f);
                 }
 
                 potentialMate = otherAnimal;
@@ -254,11 +254,6 @@ public abstract class AnimalAI : MonoBehaviour
     {
         currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
         currentHealth = Mathf.Min(currentHealth + healthDecayRate * Time.deltaTime, maxHealth);
-
-        if (currentStamina == maxStamina)
-        {
-            ScheduleTask(State.Idle, 1f);
-        }
     }
 
     private void ManageStamina()
@@ -383,50 +378,51 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected void ProcessTaskQueue()
     {
-        if (taskQueue.Count == 0 && currentState != State.Idle)
+        // Prevent task switching if the current task is actively being completed
+        if ((currentState == State.Mate && potentialMate != null &&
+                Vector3.Distance(transform.position, potentialMate.transform.position) > mateRange) ||
+            (currentState == State.Wander && !destinationReached) ||
+            (currentState == State.Flee && !destinationReached) ||
+            (currentState == State.Hunt && target != null && agent.hasPath && !destinationReached))
         {
-            currentState = State.Idle;
             return;
         }
 
-        if (taskQueue.Count > 0)
+        Task nextTask = taskQueue.Dequeue();
+        currentState = nextTask.state;
+
+        switch (currentState)
         {
-            // Prevent task switching if the current task is ongoing
-            if ((currentState == State.Mate && potentialMate != null &&
-                 Vector3.Distance(transform.position, potentialMate.transform.position) > mateRange) ||
-                (currentState == State.Wander && !destinationReached) ||
-                (currentState == State.Flee && !destinationReached))
-            {
-                return;
-            }
-
-            Task nextTask = taskQueue.Dequeue();
-            currentState = nextTask.state;
-
-            switch (currentState)
-            {
-                case State.Idle:
-                    Idle();
-                    break;
-                case State.Wander:
-                    Wander();
-                    break;
-                case State.Hunt:
+            case State.Idle:
+                Idle();
+                break;
+            case State.Wander:
+                if (IsTaskScheduled(State.Hunt))
+                {
+                    Debug.Log($"{gameObject.name}: Interrupting Wander to start Hunt.");
+                    currentState = State.Hunt; // Force transition to Hunt
                     SearchForFood();
-                    break;
-                case State.Flee:
-                    Flee();
-                    break;
-                case State.Eat:
-                    Eat();
-                    break;
-                case State.Sleep:
-                    Sleep();
-                    break;
-                case State.Mate:
-                    Mate();
-                    break;
-            }
+                }
+                else
+                {
+                    Wander();
+                }
+                break;
+            case State.Hunt:
+                SearchForFood();
+                break;
+            case State.Flee:
+                Flee();
+                break;
+            case State.Eat:
+                Eat();
+                break;
+            case State.Sleep:
+                Sleep();
+                break;
+            case State.Mate:
+                Mate();
+                break;
         }
     }
 
@@ -517,7 +513,7 @@ public abstract class AnimalAI : MonoBehaviour
             }
 
             // Display the text
-            GUI.Label(new Rect((screenPosition.x - 25), (Screen.height - screenPosition.y - 125), 250, 300), debugText, style);
+            GUI.Label(new Rect((screenPosition.x - 30), (Screen.height - screenPosition.y - 150), 250, 300), debugText, style);
         }
     }
 

@@ -84,7 +84,7 @@ MonoBehaviour:
   healthDecayRate: 5
   MaxHunger: 100
   HungerDecayRate: 1
-  hungerThreshold: 70
+  hungerThreshold: 60
   SearchFoodRange: 20
   eatRange: 0.5
   maxStamina: 100
@@ -92,13 +92,14 @@ MonoBehaviour:
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
   mateRange: 5
-  mateCooldownDuration: 120
+  mateApproachRange: 10
+  mateCooldownDuration: 30
   resultant_animal_prefab: {fileID: 538437904605431303}
   hungerCostForMating: 20
   staminaCostForMating: 30
   maxAge: 5
   agingRate: 0.01
-  predatorDetectionRange: 5
+  predatorDetectionRange: 3
   predatorTags:
   - Fox
   wanderRange: 10

@@ -7,8 +7,8 @@ public class FoxAI : AnimalAI
     {
         base.Start();
         agent.speed = 3.5f; // Foxes are faster than grasshoppers
-        maxStamina = 80f; // Foxes have less stamina than grasshoppers
-        staminaRegenRate = 0.8f; // Foxes regenerate stamina slower than grasshoppers
+        maxStamina = 50f; // Foxes have less stamina than grasshoppers
+        staminaRegenRate = 0.1f; // Foxes regenerate stamina slower than grasshoppers
     }
 
     protected override void Update()
@@ -18,47 +18,46 @@ public class FoxAI : AnimalAI
 
     protected override void SearchForFood()
     {
-        if (currentState != State.Hunt) return; // Ensure fox is in Hunt state
-
-        Collider[] preyItems = Physics.OverlapSphere(transform.position, SearchFoodRange, LayerMask.GetMask("Grasshopper"));
-        GameObject nearestPrey = null;
+        GameObject[] foodItems = GameObject.FindGameObjectsWithTag("Grasshopper");
+        GameObject nearestFood = null;
         float closestDistance = Mathf.Infinity;
         Vector3 closestNavMeshPoint = Vector3.zero;
 
-        foreach (var prey in preyItems)
+        foreach (var food in foodItems)
         {
-            float distance = Vector3.Distance(transform.position, prey.transform.position);
-
-            if (NavMesh.SamplePosition(prey.transform.position, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(food.transform.position, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
             {
+                float distance = Vector3.Distance(transform.position, navHit.position);
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    nearestPrey = prey.gameObject;
+                    nearestFood = food;
                     closestNavMeshPoint = navHit.position;
                 }
             }
         }
 
-        if (nearestPrey != null)
+        if (nearestFood != null)
         {
-            target = nearestPrey.transform;
+            target = nearestFood.transform;
             agent.SetDestination(closestNavMeshPoint);
-            Debug.Log($"{gameObject.name} is hunting for grasshopper: {nearestPrey.name}.");
 
-            // Use Physics.CheckSphere to determine if the prey is within eatRange
-            bool isInEatingRange = Physics.CheckSphere(transform.position, eatRange, LayerMask.GetMask("Grasshopper"));
+            Debug.Log($"{gameObject.name} is pathfinding {nearestFood.name}. Destination: {closestNavMeshPoint}");
 
-            if (isInEatingRange)
+            // Check if already in range
+            if (Vector3.Distance(transform.position, closestNavMeshPoint) <= eatRange + agent.stoppingDistance)
             {
-                Debug.Log($"{gameObject.name} is in eating range of grasshopper: {nearestPrey.name}. Scheduling Eat task.");
+                Debug.Log($"{gameObject.name} is in eating range of grass: {nearestFood.name}. Scheduling Eat task.");
                 ScheduleTask(State.Eat, 20f);
             }
         }
-        else if (!IsTaskScheduled(State.Wander))
+        else
         {
-            // If no prey is found, transition to Wander
-            ScheduleTask(State.Wander, 30f);
+            if (!IsTaskScheduled(State.Wander) && currentState != State.Wander)
+            {
+                Debug.Log($"{gameObject.name} found no grass. Switching to Wander.");
+                ScheduleTask(State.Wander, 30f);
+            }
         }
     }
 
@@ -71,17 +70,16 @@ public class FoxAI : AnimalAI
                 throw new System.Exception("Target is null. Unable to eat prey.");
             }
 
-            Debug.Log($"{gameObject.name} is eating grasshopper: {target.name}.");
+            Debug.Log($"{gameObject.name} is eating {target.name}.");
 
             // Destroy the grasshopper object
             Destroy(target.gameObject);
 
             // Restore hunger
-            currentHunger = Mathf.Min(currentHunger + 30f, MaxHunger); // Foxes gain more hunger from eating
+            currentHunger = Mathf.Min(currentHunger + 30f, MaxHunger);
 
             // Reset the target and schedule Idle
             target = null;
-            ScheduleTask(State.Idle, 1f);
         }
         catch (System.Exception ex)
         {
@@ -110,9 +108,6 @@ public class FoxAI : AnimalAI
             // If stamina is depleted, move slowly
             agent.speed *= lowStaminaSpeedMultiplier;
         }
-
-        // After fleeing, return to idle when stamina regenerates
-        ScheduleTask(State.Idle, 1f);
     }
 
 }

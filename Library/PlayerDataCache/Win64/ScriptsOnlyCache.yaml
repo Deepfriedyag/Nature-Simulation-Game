@@ -20,6 +20,8 @@ ScriptsOnlyBuild:
     - SpawnMenu
     - SpreadVegetation
     - SpriteBillboard
+    Unity.AI.Navigation.Editor.dll:
+    - Unity.AI.Navigation.Editor.NavMeshAssetManager
     Unity.AI.Navigation.dll:
     - Unity.AI.Navigation.NavMeshModifierVolume
     - Unity.AI.Navigation.NavMeshSurface
@@ -236,15 +238,15 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 6872}
     - Class: 114
-      Script: {instanceID: 7160}
+      Script: {instanceID: 7158}
     - Class: 114
-      Script: {instanceID: 7494}
+      Script: {instanceID: 7492}
     - Class: 114
-      Script: {instanceID: 7622}
+      Script: {instanceID: 7620}
     - Class: 114
-      Script: {instanceID: 7724}
+      Script: {instanceID: 7722}
     - Class: 114
-      Script: {instanceID: 7868}
+      Script: {instanceID: 7866}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -339,11 +341,11 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 6872}
     - Class: 114
-      Script: {instanceID: 7160}
+      Script: {instanceID: 7158}
     - Class: 114
-      Script: {instanceID: 7622}
+      Script: {instanceID: 7620}
     - Class: 114
-      Script: {instanceID: 7868}
+      Script: {instanceID: 7866}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -1143,7 +1145,7 @@ ScriptsOnlyBuild:
     className: UnityOnPointerDownMessageListener
   - hash:
       serializedVersion: 2
-      Hash: 62fd35d808b42100040725ec41360fb0
+      Hash: e65c8eb7324cbf421735bd9a04e90e85
     assemblyName: Assembly-CSharp
     namespaceName: 
     className: SaveGameHandler
@@ -1307,4 +1309,4 @@ ScriptsOnlyBuild:
   scenePathNames:
   - Assets/Main Menu.unity
   - Assets/Game.unity
-  playerPath: C:/Users/yagiz/Desktop/game/NEA Project.exe
+  playerPath: C:/Users/yagiz/Desktop/Nature Simulation Game (Windows)/NEA Project.exe

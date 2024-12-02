@@ -104,16 +104,16 @@ MonoBehaviour:
   healthDecayRate: 5
   MaxHunger: 100
   HungerDecayRate: 1
-  hungerThreshold: 50
+  hungerThreshold: 60
   SearchFoodRange: 15
-  eatRange: 0.16
+  eatRange: 0.21
   maxStamina: 100
   staminaRegenRate: 1
   staminaDrainRate: 5
   lowStaminaSpeedMultiplier: 0.5
   mateRange: 0.5
   mateApproachRange: 8
-  mateCooldownDuration: 5
+  mateCooldownDuration: 60
   resultant_animal_prefab: {fileID: 6533730962555232937}
   hungerCostForMating: 20
   staminaCostForMating: 30
