@@ -363,7 +363,6 @@
 "Assets/Scripts/CameraMovement.cs"
 "Assets/Scripts/Map Generation/BakeNavmesh.cs"
 "Assets/Scripts/Map Generation/MapDisplay.cs"
-"Assets/Scripts/Map Generation/MapGenEditor.cs"
 "Assets/Scripts/Map Generation/MapGenerator.cs"
 "Assets/Scripts/Map Generation/MeshGenerator.cs"
 "Assets/Scripts/Map Generation/Noise.cs"
@@ -373,8 +372,8 @@
 "Assets/Scripts/Menus/ConfigMenu.cs"
 "Assets/Scripts/Menus/IngameConsole.cs"
 "Assets/Scripts/Menus/MenuHandler.cs"
-"Assets/Scripts/Menus/ObjectSpawner.cs"
 "Assets/Scripts/Menus/SpawnMenu.cs"
+"Assets/Scripts/ObjectSpawner.cs"
 "Assets/Scripts/SaveGameHandler.cs"
 "Assets/Scripts/SpriteBillboard.cs"
 -langversion:9.0

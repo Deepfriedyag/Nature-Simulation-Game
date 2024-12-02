@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
+using System;
 
 public abstract class AnimalAI : MonoBehaviour
 {
@@ -60,7 +61,7 @@ public abstract class AnimalAI : MonoBehaviour
     protected PriorityQueue taskQueue;
     protected State currentState;
 
-    protected enum State
+    public enum State
     {
         Idle,
         Wander,
@@ -99,19 +100,7 @@ public abstract class AnimalAI : MonoBehaviour
 
     private void AddAppropriateTasks()
     {
-        // Handle idle state logic
-        if (currentState == State.Idle)
-        {
-            idleTimer += Time.deltaTime * time_multiplier;
-
-            // Schedule a Wander task if idle for too long
-            if (idleTimer >= wanderDelay)
-            {
-                ScheduleTask(State.Wander, 1f);
-                idleTimer = 0f;
-            }
-        }
-        else if (taskQueue.GetAllTasks().Count == 0)
+        if (taskQueue.GetAllTasks().Count == 0)
         {
             ScheduleTask(State.Idle, 1f); // Return to Idle state if no tasks are left
         }
@@ -130,55 +119,46 @@ public abstract class AnimalAI : MonoBehaviour
         else if (currentHunger > hungerCostForMating && currentStamina > staminaCostForMating &&
                  !IsTaskScheduled(State.Mate) && currentState != State.Mate)
         {
-                SearchForMate();
+            SearchForMate();
         }
 
+        // Don't schedule wander if we're trying to mate
         if (currentStamina <= maxStamina * 0.1f && !IsTaskScheduled(State.Sleep) && currentState != State.Sleep)
         {
             ScheduleTask(State.Sleep, 5f);
         }
+
     }
 
     protected virtual void SearchForMate()
     {
-        if (mateCooldownTimer > 0)
-        {
-            Debug.Log($"{gameObject.name}: Mating cooldown active. Time remaining: {mateCooldownTimer:F1}s");
-            return;
-        }
+        if (mateCooldownTimer > 0) return;
 
         Collider[] nearbyAnimals = Physics.OverlapSphere(transform.position, mateApproachRange);
         foreach (var animalCollider in nearbyAnimals)
         {
             AnimalAI otherAnimal = animalCollider.GetComponent<AnimalAI>();
-            if (otherAnimal != null && otherAnimal != this && otherAnimal.GetType() == this.GetType() &&
-                otherAnimal.currentState != State.Mate && otherAnimal.mateCooldownTimer <= 0 &&
+            if (otherAnimal != null && otherAnimal != this && otherAnimal.GetType() == this.GetType() && otherAnimal.mateCooldownTimer <= 0 &&
                 otherAnimal.currentHunger > hungerCostForMating && otherAnimal.currentStamina > staminaCostForMating)
             {
-                potentialMate = otherAnimal; // Set the potential mate
-                float distance = Vector3.Distance(transform.position, otherAnimal.transform.position);
-
-                if (distance <= mateRange)
+                // Synchronize "mate" state between the two animals
+                if (currentState != State.Mate)
                 {
-                    Debug.Log($"{gameObject.name} is ready to mate with {otherAnimal.name}");
                     ScheduleTask(State.Mate, 15f);
-                    otherAnimal.ScheduleTask(State.Mate, 15f); // Synchronize the mate's task
-                    return;
                 }
-                else
-                {
-                    Debug.Log($"{gameObject.name} is approaching {otherAnimal.name} for mating.");
-                    agent.SetDestination(otherAnimal.transform.position); // Continuously move toward the mate
-                }
+
+                potentialMate = otherAnimal;
+                potentialMate.potentialMate = this;
+                return;  // We found a mate, so no need to wander anymore
             }
         }
 
-        if (!IsTaskScheduled(State.Wander))
+        // If no mates found, proceed with wandering (Only if we aren't already on a task)
+        if (!IsTaskScheduled(State.Wander) && currentState != State.Wander)
         {
             ScheduleTask(State.Wander, 1f); // Wander if no mates are found
         }
     }
-
 
     protected virtual void Mate()
     {
@@ -188,32 +168,40 @@ public abstract class AnimalAI : MonoBehaviour
             return;
         }
 
-        // Ensure the mate is still in range
-        if (potentialMate == null || Vector3.Distance(transform.position, potentialMate.transform.position) > mateRange)
+        if (potentialMate != null)
         {
-            Debug.LogWarning($"{gameObject.name}: Mate is out of range. Aborting mating.");
-            ScheduleTask(State.Idle, 1f);
-            return;
-        }
-
-        Debug.Log($"{gameObject.name} is mating with {potentialMate.name}.");
-
-        // Spawn a new animal
-        bool isSpawner = Random.value > 0.5f; // Randomly decide which parent spawns the offspring
-        if (isSpawner)
-        {
-            Vector3 spawnPosition = transform.position + Random.insideUnitSphere * 2f;
-            spawnPosition.y = transform.position.y;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(spawnPosition, out hit, 2f, NavMesh.AllAreas))
+            // Ensure that both animals are still in the mating state
+            if (potentialMate.currentState != State.Mate)
             {
-                spawnPosition = hit.position;
+                Debug.LogWarning($"{gameObject.name}: Potential mate is no longer in mate state.");
+                potentialMate = null;
+                return;
+            }
+
+            float distance = Vector3.Distance(transform.position, potentialMate.transform.position);
+
+            // Update destination while out of range
+            if (distance > mateRange)
+            {
+                Debug.Log($"{gameObject.name} approaching {potentialMate.name} for mating.");
+                agent.SetDestination(potentialMate.transform.position);
+                return;
+            }
+
+            // If both animals are in range, perform mating
+            Debug.Log($"{gameObject.name} is mating with {potentialMate.name}.");
+
+            // Spawn offspring logic
+            Vector3 midpoint = (transform.position + potentialMate.transform.position) / 2f;
+
+            if (NavMesh.SamplePosition(midpoint, out NavMeshHit navHit, 1f, NavMesh.AllAreas))
+            {
+                Vector3 spawnPosition = navHit.position;
 
                 if (resultant_animal_prefab != null)
                 {
                     Instantiate(resultant_animal_prefab, spawnPosition, Quaternion.identity);
-                    Debug.Log($"A new {gameObject.name} has been spawned!");
+                    IngameConsole.Instance.LogMessage($"A new {gameObject.name} was born");
                 }
                 else
                 {
@@ -222,19 +210,18 @@ public abstract class AnimalAI : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"{gameObject.name}: Failed to spawn offspring on a valid NavMesh position.");
+                Debug.LogWarning($"{gameObject.name}: Failed to spawn offspring. No valid NavMesh position at the midpoint.");
             }
+
+            // Deduct costs and reset cooldowns
+            currentHunger -= hungerCostForMating;
+            currentStamina -= staminaCostForMating;
+            mateCooldownTimer = mateCooldownDuration;
+
+            potentialMate.mateCooldownTimer = potentialMate.mateCooldownDuration;
+            potentialMate = null;
         }
-
-        // Deduct costs and reset cooldown
-        currentHunger -= hungerCostForMating;
-        currentStamina -= staminaCostForMating;
-        mateCooldownTimer = mateCooldownDuration;
-        potentialMate = null;
     }
-
-
-
 
     private void AgeAndHungerDecay()
     {
@@ -307,7 +294,27 @@ public abstract class AnimalAI : MonoBehaviour
     }
 
     protected abstract void SearchForFood(); // different for each animal, overwrite in child classes
-    protected abstract void Idle();
+
+    protected virtual void Idle()
+    {
+        // Reset the timer only if it's a new transition to Idle
+        if (currentState != State.Idle)
+        {
+            idleTimer = 0f;
+        }
+
+        idleTimer += Time.deltaTime * time_multiplier;
+
+        // Schedule a Wander task if idle for too long
+        if (idleTimer >= wanderDelay)
+        {
+            idleTimer = 0f;
+            ScheduleTask(State.Wander, 1f);
+        }
+
+        currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
+    }
+
 
     private void Die(string cause)
     {
@@ -319,7 +326,7 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected virtual void Wander()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * wanderRange;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRange;
         randomDirection += transform.position;
         NavMeshHit hit;
 
@@ -327,6 +334,7 @@ public abstract class AnimalAI : MonoBehaviour
         {
             agent.SetDestination(hit.position);
         }
+
     }
 
     protected virtual void Flee()
@@ -351,9 +359,9 @@ public abstract class AnimalAI : MonoBehaviour
         {
             Debug.Log("Idle task already scheduled. returned from eat");
             return;
-            
+
         }
-        else 
+        else
         {
             ScheduleTask(State.Idle, 1f);
         }
@@ -383,17 +391,17 @@ public abstract class AnimalAI : MonoBehaviour
 
         if (taskQueue.Count > 0)
         {
-            // Only switch states if the current task is complete or not movement-based
-            if ((currentState == State.Wander && !destinationReached) ||
+            // Prevent task switching if the current task is ongoing
+            if ((currentState == State.Mate && potentialMate != null &&
+                 Vector3.Distance(transform.position, potentialMate.transform.position) > mateRange) ||
+                (currentState == State.Wander && !destinationReached) ||
                 (currentState == State.Flee && !destinationReached))
             {
-                return; // Do not dequeue the next task until the current movement task is done
+                return;
             }
 
             Task nextTask = taskQueue.Dequeue();
-
             currentState = nextTask.state;
-            idleTimer = 0f;
 
             switch (currentState)
             {
@@ -421,6 +429,7 @@ public abstract class AnimalAI : MonoBehaviour
             }
         }
     }
+
 
     protected class Task
     {
@@ -461,6 +470,23 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
+    public string CurrentState
+    {
+        get { return currentState.ToString(); } // Convert the enum to a string
+    }
+
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+        set { currentHealth = Mathf.Clamp(value, 0, maxHealth); }
+    }
+
+    public float CurrentHunger
+    {
+        get { return currentHunger; }
+        set { currentHunger = Mathf.Clamp(value, 0, MaxHunger); }
+    }
+
     private void OnGUI() // reserved Unity method. renders the specified info on the screen as text
     {
         if (Time.timeScale == 0) return; // Do not render debug info when paused
@@ -473,7 +499,8 @@ public abstract class AnimalAI : MonoBehaviour
             style.fontSize = 12;
 
             // Build the debug text with proper formatting and spacing
-            string debugText = $"State: {currentState}\n" +
+            string debugText = $"Name: {gameObject.name}\n" +
+                               $"State: {currentState}\n" +
                                $"Age: {currentAge:F1}/{maxAge}\n" +
                                $"Hunger: {currentHunger:F1}/{MaxHunger}\n" +
                                $"Health: {currentHealth:F1}/{maxHealth}\n" +

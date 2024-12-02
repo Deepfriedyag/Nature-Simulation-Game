@@ -13,11 +13,6 @@ public class GrasshopperAI : AnimalAI
         base.Update();
     }
 
-    protected override void Idle()
-    {
-        currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
-    }
-
     protected override void SearchForFood()
     {
         if (currentState != State.Hunt) return; // Ensure the grasshopper is locked in the Hunt state

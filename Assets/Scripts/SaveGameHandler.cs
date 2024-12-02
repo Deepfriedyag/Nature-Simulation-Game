@@ -1,54 +1,31 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveGameHandler : MonoBehaviour
 {
-    [SerializeField] private Dictionary<string, string> object_type_to_prefab_name = new Dictionary<string, string>();
-    [SerializeField] private Dictionary<string, GameObject> object_prefabs = new Dictionary<string, GameObject>();
-    // DO THE ABOVE FOR ANIMALS LATER []
+    [SerializeField] private Transform spawned_object_parent;
+    [SerializeField] private List<string> animal_tags;  // List of tags for all animal types
+    [SerializeField] private List<string> vegetation_tags;  // List of tags for all vegetation types
 
-    [SerializeField] private Transform spawned_object_parent; // parent object to hold all the spawned gameobjects
-
-    private void Awake() // awake is a reserved Unity method that is run when the script is first loaded
-    {
-        // map saved names to actual prefab names
-        object_type_to_prefab_name["Grass(Clone)"] = "Grass"; // assumes prefab is named "Grass" in the Resources folder
-        object_type_to_prefab_name["Tree(Clone)"] = "Tree";
-
-        // load prefabs from Resources based on mapped names
-        foreach (var entry in object_type_to_prefab_name)
-        {
-            GameObject prefab = Resources.Load<GameObject>(entry.Value);
-            if (prefab != null)
-            {
-                object_prefabs[entry.Key] = prefab;
-            }
-            else
-            {
-                Debug.LogWarning($"Prefab {entry.Value} not found in Resources for vegetation type {entry.Key}");
-            }
-        }
-    }
-
-    [System.Serializable] // this attribute tells Unity to serialize this class. This means that it can be converted to a byte stream and saved to disk
+    [System.Serializable]
     public class GameData
     {
         public int world_seed;
         public Vector3 player_position;
         public Vector3 player_rotation;
 
-        public List<AnimalData> animal_data;
-        public List<VegetationData> vegetation_data;
+        public List<AnimalData> animal_data = new List<AnimalData>();
+        public List<VegetationData> vegetation_data = new List<VegetationData>();
     }
 
     [System.Serializable]
     public class AnimalData
     {
-        public string type;
+        public string tag;  // Tag for identifying the animal type
         public string ai_state;
-        public int health;
-        public int thirst;
-        public int hunger;
+        public float health;
+        public float hunger;
         public Vector3 position;
         public Vector3 rotation;
     }
@@ -56,48 +33,57 @@ public class SaveGameHandler : MonoBehaviour
     [System.Serializable]
     public class VegetationData
     {
-        public string vegetation_type;
-        public Vector3 vegetation_position;
-        public Vector3 vegetation_rotation;
+        public string tag;  // Tag for identifying the vegetation type
+        public Vector3 position;
+        public Vector3 rotation;
     }
 
     public GameData GatherGameData()
     {
         GameData game_data = new GameData();
-        GameObject player = GameObject.FindGameObjectWithTag("MainCamera"); // find the player object by tag for reference because it is a game object and not a script
+        GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
 
         game_data.world_seed = MapGenerator.world_seed;
         game_data.player_position = player.transform.position;
         game_data.player_rotation = player.transform.eulerAngles;
 
-        // collect animal data
-        //game_data.animal_data = new list<animaldata>();
-        //gameobject[] animals = gameobject.findgameobjectswithtag("animal");
-
-        //foreach (gameobject animal in animals) // loop through all the animals in the world
-        //{
-        //    animaldata animal_data = new animaldata();
-        //    animal_data.type = animal.name;
-        //    animal_data.ai_state = animal.getcomponent<animalai>().ai_state; // fix later [][][][][[][][[][][][][][ how does this work for different ai scripts?
-        //    animal_data.health = animal.getcomponent<animalai>().health; // getcomponent is a method that gets the component (the animalai script in this case) of a game object to access its variables
-        //    animal_data.thirst = animal.getcomponent<animalai>().thirst;
-        //    animal_data.hunger = animal.getcomponent<animalai>().hunger;
-        //    animal_data.position = animal.transform.position;
-        //    animal_data.rotation = animal.transform.eulerangles;
-        //    game_data.animal_data.add(animal_data);
-        //}
-
-        // collect vegetation data
-        game_data.vegetation_data = new List<VegetationData>();
-        GameObject[] vegetation = GameObject.FindGameObjectsWithTag("Vegetation");
-
-        foreach (GameObject veg in vegetation)
+        // Collect animal data
+        game_data.animal_data = new List<AnimalData>();
+        foreach (string animal_tag in animal_tags) // Loop through all animal tags
         {
-            VegetationData vegetation_data = new VegetationData();
-            vegetation_data.vegetation_type = veg.name;
-            vegetation_data.vegetation_position = veg.transform.position;
-            vegetation_data.vegetation_rotation = veg.transform.eulerAngles;
-            game_data.vegetation_data.Add(vegetation_data);
+            GameObject[] animals = GameObject.FindGameObjectsWithTag(animal_tag);
+            foreach (GameObject animal in animals)
+            {
+                AnimalAI animalAI = animal.GetComponent<AnimalAI>();
+                if (animalAI != null)
+                {
+                    AnimalData animal_data = new AnimalData();
+                    animal_data.tag = animal.tag;  // Use tag for prefab identification
+                    animal_data.ai_state = animalAI.CurrentState;  // Access public property
+                    animal_data.health = animalAI.CurrentHealth;  // Access health property
+                    animal_data.hunger = animalAI.CurrentHunger;  // Access hunger property
+                    animal_data.position = animal.transform.position;
+                    animal_data.rotation = animal.transform.eulerAngles;
+
+                    game_data.animal_data.Add(animal_data);
+                }
+            }
+        }
+
+        // Collect vegetation data
+        game_data.vegetation_data = new List<VegetationData>();
+        foreach (string veg_tag in vegetation_tags)  // Loop through all vegetation tags
+        {
+            GameObject[] vegetation = GameObject.FindGameObjectsWithTag(veg_tag);
+            foreach (GameObject veg in vegetation)
+            {
+                VegetationData vegetation_data = new VegetationData();
+                vegetation_data.tag = veg.tag;  // Use tag for prefab identification
+                vegetation_data.position = veg.transform.position;
+                vegetation_data.rotation = veg.transform.eulerAngles;
+
+                game_data.vegetation_data.Add(vegetation_data);
+            }
         }
 
         return game_data;
@@ -105,42 +91,57 @@ public class SaveGameHandler : MonoBehaviour
 
     public void SaveGame()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
-
         GameData game_data = GatherGameData();
-        string game_location_path = Application.persistentDataPath + "/Saves.json"; // Application.persistentDataPath is consistent across all platforms and points to the data folder of the game
-
-        string save_file = JsonUtility.ToJson(game_data, true); // convert game data to JSON format. the boolean parameter (true) makes the JSON output more readable by adding more spacing
-        System.IO.File.WriteAllText(game_location_path, save_file); // write the JSON data to a file
-        Debug.Log("info - Game saved to " + game_location_path); // log a message to the dev console
+        string game_location_path = Application.persistentDataPath + "/Saves.json";
+        string save_file = JsonUtility.ToJson(game_data, true);
+        System.IO.File.WriteAllText(game_location_path, save_file);
+        Debug.Log("Info - Game saved to " + game_location_path);
     }
 
     public void LoadGame()
     {
-        try // this is to prevent a possible crash if the file we are looking for does not exist. since this method will be called from a button click, we don't need to worry about making a loop handle this case
+        try
         {
-            string json = System.IO.File.ReadAllText(Application.persistentDataPath + "/Saves.json"); // read the JSON data from the file
-            GameData game_data = JsonUtility.FromJson<GameData>(json); // convert the JSON data back to a GameData object
+            string json = System.IO.File.ReadAllText(Application.persistentDataPath + "/Saves.json");
+            GameData game_data = JsonUtility.FromJson<GameData>(json);
 
-            // load player data
             GameObject player = GameObject.FindGameObjectWithTag("MainCamera");
             MapGenerator.world_seed = game_data.world_seed;
             player.transform.position = game_data.player_position;
             player.transform.eulerAngles = game_data.player_rotation;
 
-            // load animal data
-            // ADD THIS LATER []
-
-            // load vegetation data
-            foreach (VegetationData veg_data in game_data.vegetation_data)
+            // Load animal data
+            foreach (AnimalData animal_data in game_data.animal_data)
             {
-                if (object_prefabs.TryGetValue(veg_data.vegetation_type, out GameObject prefab))
+                GameObject prefab = Resources.Load<GameObject>(animal_data.tag); // Load prefab based on tag
+                if (prefab != null)
                 {
-                    Instantiate(prefab, veg_data.vegetation_position, Quaternion.Euler(veg_data.vegetation_rotation), spawned_object_parent);
+                    GameObject animal = Instantiate(prefab, animal_data.position, Quaternion.Euler(animal_data.rotation), spawned_object_parent);
+                    AnimalAI animalAI = animal.GetComponent<AnimalAI>();
+                    if (animalAI != null)
+                    {
+                        RestoreState(animalAI, animal_data.ai_state);  // Restore the state directly
+                        animalAI.CurrentHealth = animal_data.health;  // Set health
+                        animalAI.CurrentHunger = animal_data.hunger;  // Set hunger
+                    }
                 }
                 else
                 {
-                    Debug.LogWarning($"Warning - No prefab found for vegetation type: {veg_data.vegetation_type}");
+                    Debug.LogWarning($"No prefab found for animal tag: {animal_data.tag}");
+                }
+            }
+
+            // Load vegetation data
+            foreach (VegetationData veg_data in game_data.vegetation_data)
+            {
+                GameObject prefab = Resources.Load<GameObject>(veg_data.tag); // Load prefab based on tag
+                if (prefab != null)
+                {
+                    Instantiate(prefab, veg_data.position, Quaternion.Euler(veg_data.rotation), spawned_object_parent);
+                }
+                else
+                {
+                    Debug.LogWarning($"No prefab found for vegetation tag: {veg_data.tag}");
                 }
             }
 
@@ -150,7 +151,22 @@ public class SaveGameHandler : MonoBehaviour
         {
             Debug.Log("Error - No save file found, cannot load game");
         }
-        
     }
 
+    private void RestoreState(AnimalAI animalAI, string stateName)
+    {
+        var type = typeof(AnimalAI);
+        var stateField = type.GetField("currentState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+        if (stateField != null)
+        {
+            var stateEnumType = stateField.FieldType;
+            var stateValue = Enum.Parse(stateEnumType, stateName);
+            stateField.SetValue(animalAI, stateValue);
+        }
+        else
+        {
+            Debug.LogWarning($"Failed to restore state: {stateName}");
+        }
+    }
 }

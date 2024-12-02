@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4965246512951222343}
   m_Layer: 29
   m_Name: Grass
-  m_TagString: Vegetation
+  m_TagString: Grass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 8794562286958827149}
   - component: {fileID: 1675786188734238700}
   m_Layer: 29
-  m_Name: grass
+  m_Name: Grass
   m_TagString: Grass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -17,7 +17,6 @@ public class IngameConsole : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // keep the console across scenes (such as the main menu and the game map/terrain)
         }
         else
         {

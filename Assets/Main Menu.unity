@@ -3906,6 +3906,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawned_object_parent: {fileID: 0}
+  animal_tags:
+  - Fox
+  - Grasshopper
 --- !u!1 &1835685188
 GameObject:
   m_ObjectHideFlags: 0

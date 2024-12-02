@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5778052636180017710}
   m_Layer: 0
   m_Name: Tree
-  m_TagString: Vegetation
+  m_TagString: Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7141787780729107148}
   - component: {fileID: 4066896145416996313}
   m_Layer: 0
-  m_Name: tree transparent
+  m_Name: Tree
   m_TagString: Tree
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
