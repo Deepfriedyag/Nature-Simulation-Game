@@ -711,7 +711,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.033333335
+  m_VoxelSize: 0.05
   m_MinRegionArea: 0.1
   m_NavMeshData: {fileID: 23800000, guid: 067787092dd31214a88c68c9765cdb91, type: 2}
   m_BuildHeightMesh: 0
@@ -743,7 +743,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   navmesh_surface: {fileID: 158952371}
-  generate_navmesh: 1
+  is_generate_navmesh: 1
 --- !u!1 &159104059
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,7 +1123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3667586226f4c41bf69aa16270e2fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 10
+  sensitivity: 300
   slow_speed: 1
   normal_speed: 5
   fast_speed: 50
@@ -1590,7 +1590,7 @@ MonoBehaviour:
   vegetation_count: 2000
   height_offset: 0.5
   min_height: 2.5
-  max_height: 5
+  max_height: 5.1
   vegetation_prefabs:
   - {fileID: 32925716354649093, guid: d8d0ad334dd4b7b49bd6d37345f58b89, type: 3}
   - {fileID: 7039510847369172168, guid: c6e43f88c7964254dad118df73b12b5d, type: 3}
@@ -1627,7 +1627,7 @@ MonoBehaviour:
   spread_check_interval: 10
   height_offset: 0.5
   min_height: 2.5
-  max_height: 5
+  max_height: 5.1
   vegetation_prefabs:
   - {fileID: 32925716354649093, guid: d8d0ad334dd4b7b49bd6d37345f58b89, type: 3}
   - {fileID: 7039510847369172168, guid: c6e43f88c7964254dad118df73b12b5d, type: 3}
@@ -4884,8 +4884,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c75d37b342314241a51753c1b0a7aca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  auto_update_map: 1
-  level_of_detail: 1
+  is_auto_update_map: 0
+  level_of_detail: 0
   octaves: 5
   noise_scale: 25
   mesh_height_multiplier: 120

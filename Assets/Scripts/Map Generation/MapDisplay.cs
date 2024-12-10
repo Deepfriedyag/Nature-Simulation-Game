@@ -1,21 +1,23 @@
 using UnityEngine;
 
-public class MapDisplay : MonoBehaviour
+public class MapDisplay : MonoBehaviour // MonoBehaviour is the base class from which every Unity script derives
 {
-    public Renderer texture_render;
-    public MeshFilter mesh_filter;
-    public MeshRenderer mesh_renderer;
-    
+
+    [SerializeField] private Renderer texture_render; // renderer component to display the texture
+    [SerializeField] private MeshFilter mesh_filter; // meshFilter component to hold the mesh data
+    [SerializeField] private MeshRenderer mesh_renderer; // meshRenderer component to render the mesh with a material
+
+    // Method to draw the map as a texture
     public void DrawTexture(Texture2D texture)
     {
         texture_render.sharedMaterial.mainTexture = texture;
-        texture_render.transform.localScale = new Vector3(texture.width, 1, texture.height);
+        texture_render.transform.localScale = new Vector3(texture.width, 1, texture.height); // adjust the scale of the texture to match its dimensions
     }
 
-    public void DrawMesh(MeshData MeshData, Texture2D texture)
+    // Method to draw the map as a mesh
+    public void DrawMesh(MeshData meshData, Texture2D texture) // one of the input parameters is my MeshData class (see in MeshGenerator.cs)
     {
-        mesh_filter.sharedMesh = MeshData.CreateMesh();
+        mesh_filter.sharedMesh = meshData.CreateMesh();
         mesh_renderer.sharedMaterial.mainTexture = texture;
     }
-
 }

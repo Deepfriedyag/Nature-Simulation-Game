@@ -1,28 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // needed to use UI components for the config menu like checkboxes and sliders
 
-public class ConfigMenu : MonoBehaviour
+public class ConfigMenu : MonoBehaviour // MonoBehaviour is the base class from which every Unity script derives
 {
-    // UI Components
-    public Slider volume;
-    public Dropdown resolution;
-    public Toggle fullscreen;
+    [SerializeField] private Slider volume;
+    [SerializeField] private Dropdown resolution;
+    [SerializeField] private Toggle fullscreen;
 
-    // Available Resolutions
     private Resolution[] resolutions;
 
-    private void Start()
+    private void Start() // reserved Unity method. called once when the script is first loaded. this is where we set up the config menu, populating the dropdowns and setting the initial values
     {
-        // Set volume slider
-        volume.value = PlayerPrefs.GetFloat("volume", 1f); // playerprefs is used to store player data between game sessions
+        volume.value = PlayerPrefs.GetFloat("volume", 1f); // PlayerPrefs is used to store player data to a local registry between game sessions
         volume.onValueChanged.AddListener(SetVolume);
 
-        // Set fullscreen toggle
         fullscreen.isOn = Screen.fullScreen;
         fullscreen.onValueChanged.AddListener(SetFullscreen);
 
-        // Populate resolution dropdown
         resolutions = Screen.resolutions;
         resolution.ClearOptions();
 
@@ -47,23 +42,21 @@ public class ConfigMenu : MonoBehaviour
         resolution.onValueChanged.AddListener(SetResolution);
     }
 
-    // Set volume based on slider
-    public void SetVolume(float volume)
+    // the methods below are called from interactive UI elements in menus therefore they have to be declared public
+    public void SetVolume(float volume) // set volume based on slider
     {
         AudioListener.volume = volume;
         PlayerPrefs.SetFloat("volume", volume);
     }
 
-    // Set fullscreen mode
-    public void SetFullscreen(bool isFullscreen)
+    public void SetFullscreen(bool is_full_screen) // set fullscreen mode
     {
-        Screen.fullScreen = isFullscreen;
+        Screen.fullScreen = is_full_screen;
     }
 
-    // Set resolution based on dropdown selection
-    public void SetResolution(int resolutionIndex)
+    public void SetResolution(int resolution_index) // set resolution based on dropdown selection
     {
-        Resolution resolution = resolutions[resolutionIndex];
+        Resolution resolution = resolutions[resolution_index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 }

@@ -1,109 +1,98 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class GrasshopperAI : AnimalAI
+// the GrasshopperAI class extends the AnimalAI base class to define specific behaviors for a grasshopper
+public class GrasshopperAI : AnimalAI // inherit from the AnimalAI base class
 {
-    protected override void Start()
+    protected override void Start() // calls the base class's Start() method to ensure standard initialization
     {
-        base.Start();
+        base.Start(); // initialize base class variables and tasks
     }
-
+    
     protected override void Update()
     {
-        base.Update();
+        base.Update(); // ensures the base Update logic (e.g., hunger decay, stamina management) is preserved while still allowing for custom behavior in this method
     }
 
-    protected override void SearchForFood()
+    protected override void SearchForFood() // defines grasshopper's custom behaviour for finding food as the behaviour is different for each animal species
     {
-        GameObject[] foodItems = GameObject.FindGameObjectsWithTag("Grass");
-        GameObject nearestFood = null;
-        float closestDistance = Mathf.Infinity;
-        Vector3 closestNavMeshPoint = Vector3.zero;
-
-        foreach (var food in foodItems)
+        GameObject[] food_items = GameObject.FindGameObjectsWithTag("Grass"); // grasshoppers eat grass
+        GameObject nearest_food = null;
+        float closest_distance = Mathf.Infinity;
+        Vector3 closest_navmesh_point = Vector3.zero; // stores the nearest navigable point
+        
+        foreach (var food in food_items) // iterate through all grass objects to find the nearest one
         {
-            if (NavMesh.SamplePosition(food.transform.position, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(food.transform.position, out NavMeshHit nav_hit, 2f, NavMesh.AllAreas)) // check if the grass object is on a valid NavMesh
             {
-                float distance = Vector3.Distance(transform.position, navHit.position);
-                if (distance < closestDistance)
+                float distance = Vector3.Distance(transform.position, nav_hit.position);
+                
+                if (distance < closest_distance) // update the closest grass if the distance is smaller
                 {
-                    closestDistance = distance;
-                    nearestFood = food;
-                    closestNavMeshPoint = navHit.position;
+                    closest_distance = distance;
+                    nearest_food = food;
+                    closest_navmesh_point = nav_hit.position;
                 }
             }
         }
 
-        if (nearestFood != null)
+        if (nearest_food != null) // if a valid grass object is found, set it as the target and move toward it
         {
-            target = nearestFood.transform;
-            agent.SetDestination(closestNavMeshPoint);
+            target = nearest_food.transform;
+            agent.SetDestination(closest_navmesh_point); // navigate to the grass
 
-            Debug.Log($"{gameObject.name} is pathfinding to grass: {nearestFood.name}. Destination: {closestNavMeshPoint}");
-
-            // Check if already in range
-            if (Vector3.Distance(transform.position, closestNavMeshPoint) <= eatRange + agent.stoppingDistance)
+            if (Vector3.Distance(transform.position, closest_navmesh_point) <= eat_range + agent.stoppingDistance) // check if the grass is within eating range and schedule an "eat" task if it is
             {
-                Debug.Log($"{gameObject.name} is in eating range of grass: {nearestFood.name}. Scheduling Eat task.");
                 ScheduleTask(State.Eat, 20f);
             }
         }
         else
         {
-            if (!IsTaskScheduled(State.Wander) && currentState != State.Wander)
+            if (!IsTaskScheduled(State.Wander) && current_state != State.Wander) // if no grass is found, schedule a wander task to look for food elsewhere
             {
-                Debug.Log($"{gameObject.name} found no grass. Switching to Wander.");
                 ScheduleTask(State.Wander, 30f);
             }
         }
     }
 
-    protected override void Eat()
+    protected override void Eat() // defines grasshoppers' behaviour for eating food
     {
         try
         {
-            if (target == null)
+
+            if (target == null) // ensure the target is not null before attempting to eat
             {
                 throw new System.Exception("Target is null. Unable to eat grass.");
             }
 
-            Debug.Log($"{gameObject.name} is eating grass: {target.name}.");
+            
+            Destroy(target.gameObject); // destroy/delete the grass object after eating
 
-            // Destroy the grass object
-            Destroy(target.gameObject);
+            current_hunger = Mathf.Min(current_hunger + 20f, max_hunger);
 
-            // Restore hunger
-            currentHunger = Mathf.Min(currentHunger + 20f, MaxHunger);
-
-            // Reset the target and schedule Idle
             target = null;
         }
-        catch (System.Exception ex)
+        catch (System.Exception)
         {
-            Debug.LogWarning($"{gameObject.name} encountered an error while eating: {ex.Message}. Rescheduling Hunt.");
-            // Reschedule Hunt task if something goes wrong
-            ScheduleTask(State.Hunt, 10f);
+            ScheduleTask(State.Hunt, 10f); // reschedule a hunt task to find new food
         }
     }
 
-    protected override void Flee()
+    protected override void Flee() // defines grasshoppers' behaviour for fleeing from predators
     {
-        if (target != null && currentStamina > 0)
+        if (target != null && current_stamina > 0)
         {
-            // Move away from the predator
-            Vector3 fleeDirection = (transform.position - target.position).normalized * 10f;
-            NavMeshHit hit;
+            Vector3 flee_direction = (transform.position - target.position).normalized * 10f; // calculate a direction opposite to the predator's position
 
-            if (NavMesh.SamplePosition(transform.position + fleeDirection, out hit, 10f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(transform.position + flee_direction, out NavMeshHit hit, 10f, NavMesh.AllAreas))
             {
                 agent.SetDestination(hit.position);
             }
         }
         else
         {
-            // If stamina is depleted, move slowly
-            agent.speed *= lowStaminaSpeedMultiplier;
+            // if stamina is depleted, reduce speed and flee at a slower pace
+            agent.speed *= low_stamina_speed_multiplier;
         }
     }
-
 }

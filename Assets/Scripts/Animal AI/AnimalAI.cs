@@ -1,65 +1,63 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
-using System;
 
+// abstract class for implementing different animal AIs, provides a base framework for various animal behaviors.
 public abstract class AnimalAI : MonoBehaviour
 {
-    // I can edit all of the values with the [serializeField] attribute in the unity inspector
-    [Header("Health")]
-    [SerializeField] protected float maxHealth = 100f; // Maximum health
-    [SerializeField] protected float healthDecayRate = 5f; // Health decay rate per second when hunger is zero
+    [Header("Health")] // this attribute groups the following variables under a header in the Unity inspector. useful for staying organised
+    [SerializeField] protected float max_health = 100f;
+    [SerializeField] protected float starving_health_decay_rate = 5f;
 
     [Header("Hunger")]
-    [SerializeField] protected float MaxHunger = 100f;
-    [SerializeField] protected float HungerDecayRate = 1f;
-    [SerializeField] protected float hungerThreshold = 50f; // Hunger % threshold to start hunting
-    [SerializeField] protected float SearchFoodRange = 20f;
-    [SerializeField] protected float eatRange = 2f;        // Distance within which grass can be eaten
+    [SerializeField] protected float max_hunger = 100f;
+    [SerializeField] protected float hunger_decay_rate = 1f;
+    [SerializeField] protected float hunger_threshold = 50f; // hunger threshold to start hunting
+    [SerializeField] protected float search_food_range = 20f;
+    [SerializeField] protected float eat_range = 2f;
 
     [Header("Stamina")]
-    [SerializeField] protected float maxStamina = 100f; // Maximum stamina
-    [SerializeField] protected float staminaRegenRate = 1f; // Stamina regeneration rate per second
-    [SerializeField] protected float staminaDrainRate = 5f; // Stamina drain rate per second while moving
-    [SerializeField] protected float lowStaminaSpeedMultiplier = 0.5f; // Speed multiplier when stamina is low
+    [SerializeField] protected float max_stamina = 100f;
+    [SerializeField] protected float stamina_regen_rate = 1f;
+    [SerializeField] protected float stamina_drain_rate = 5f; // stamina drain rate per second while in certain states
+    [SerializeField] protected float low_stamina_speed_multiplier = 0.5f;
 
     [Header("Mating")]
-    [SerializeField] protected float mateRange = 5f; // Range to detect potential mates
-    [SerializeField] protected float mateApproachRange = 10f; // Larger range to detect potential mates
-    [SerializeField] protected float mateCooldownDuration = 120f; // Cooldown in seconds between mating
-    [SerializeField] protected GameObject resultant_animal_prefab; // Prefab to spawn new animals
-    [SerializeField] protected float hungerCostForMating = 20f; // Hunger cost for mating
-    [SerializeField] protected float staminaCostForMating = 30f; // Stamina cost for mating
+    [SerializeField] protected float mate_range = 0.5f; // range at which the animal can mate with another
+    [SerializeField] protected float mate_approach_range = 10f; // range to detect potential mates
+    [SerializeField] protected float mate_cooldown_duration = 120f;
+    [SerializeField] protected float mating_hunger_cost = 20f;
+    [SerializeField] protected float mating_stamina_cost = 30f;
+    [SerializeField] protected GameObject resultant_animal_prefab; // what animal to spawn as the result of mating
 
     [Header("Aging")]
-    [SerializeField] protected float maxAge = 100f; // Maximum age before death
-    [SerializeField] protected float agingRate = 0.1f; // Rate of aging, modified by Time.timeScale
+    [SerializeField] protected float max_age = 100f; // the animal dies upon reaching this age
+    [SerializeField] protected float aging_rate = 0.1f;
 
     [Header("Predator Detection")]
-    [SerializeField] protected float predatorDetectionRange = 10f; // Detection range for predators
-    [SerializeField] protected List<string> predatorTags = new List<string>(); // List of predator tags
+    [SerializeField] protected float predator_detection_range = 10f;
+    [SerializeField] protected List<string> predator_tags = new List<string>(); // list of animals that are considered predators
 
     [Header("Wandering Behaviour")]
-    [SerializeField] protected float wanderRange = 5f; // Range for wandering
-    [SerializeField] protected float wanderDelay = 3f; // Delay before scheduling a Wander task while idle
+    [SerializeField] protected float wander_range = 5f;
+    [SerializeField] protected float wander_delay = 3f; // timer to schedule a wander task after being idle for too long
 
-    protected float time_multiplier => Time.timeScale;
-    protected AnimalAI potentialMate;
-    protected float currentStamina;
-    protected float currentHunger;
-    protected float currentHealth;
+    protected float time_multiplier => Time.timeScale; // time multiplier to control the speed of the simulation of animals to be on par with the rest of the game
+    protected float current_stamina;
+    protected float current_hunger;
+    protected float current_health;
+    protected float mate_cooldown_timer;
+    protected bool is_destination_reached => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
+    protected bool is_dead = false;
 
-    private float currentAge = 0f;
-    private float idleTimer = 0f;
-    private float mateCooldownTimer;
-
-    protected bool destinationReached => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
-    protected bool isDead = false;
-
+    protected AnimalAI potential_mate;
     protected NavMeshAgent agent;
     protected Transform target;
-    protected PriorityQueue taskQueue;
-    protected State currentState;
+    protected PriorityQueue task_queue;
+    protected State current_state;
+
+    private float current_age = 0f;
+    private float idle_timer = 0f;
 
     public enum State
     {
@@ -72,24 +70,26 @@ public abstract class AnimalAI : MonoBehaviour
         Mate
     }
 
-    protected virtual void Start()
+    protected virtual void Start() // reserved Unity method. called once when the script is first loaded
     {
-        currentHunger = MaxHunger;
-        currentStamina = maxStamina;
-        currentHealth = maxHealth;
-        mateCooldownTimer = mateCooldownDuration;
+        // initialise some variables
+        current_hunger = max_hunger;
+        current_stamina = max_stamina;
+        current_health = max_health;
+        mate_cooldown_timer = mate_cooldown_duration;
         agent = GetComponent<NavMeshAgent>();
-        taskQueue = new PriorityQueue();
+        task_queue = new PriorityQueue();
 
-        // Start in Idle state
-        currentState = State.Idle;
-        ScheduleTask(State.Idle, 1f);  // Initial idle task
+        // start with an idle task
+        current_state = State.Idle;
+        ScheduleTask(State.Idle, 1f);
     }
 
-    protected virtual void Update()
+    protected virtual void Update() // reserved Unity method. called once per frame. contains the main logic for the animal AI
     {
-        if (isDead) return;
+        if (is_dead) return; // do not update if the animal is dead
 
+        // update the animal's stats and behaviour
         AgeAndHungerDecay();
         ManageStamina();
         DetectPredators();
@@ -98,105 +98,103 @@ public abstract class AnimalAI : MonoBehaviour
         AddAppropriateTasks();
     }
 
-    private void AddAppropriateTasks()
+    private void AddAppropriateTasks() // adds appropriate tasks to the priority queue based on the animal's current state and stats
     {
-        // Schedule a Hunt task if hunger falls below the threshold
-        if (currentHunger / MaxHunger < hungerThreshold / 100f && !IsTaskScheduled(State.Hunt) && currentState != State.Hunt)
+        // schedule a sleep task if stamina falls below 10%
+        if (current_stamina <= max_stamina * 0.1f && !IsTaskScheduled(State.Sleep) && current_state != State.Sleep)
+        {
+            ScheduleTask(State.Sleep, 15f);
+        }
+
+        // schedule a hunt task if hunger falls below the threshold
+        if (current_hunger / max_hunger < hunger_threshold / 100f && !IsTaskScheduled(State.Hunt) && current_state != State.Hunt)
         {
             ScheduleTask(State.Hunt, 10f);
         }
 
-        if (mateCooldownTimer > 0)
+        // search for mates if the animal meets the requirements. SearchForMate() method then schedules a mate task if a potential mate is found
+        if (mate_cooldown_timer > 0)
         {
-            mateCooldownTimer -= Time.deltaTime * time_multiplier;
-            if (mateCooldownTimer < 0) mateCooldownTimer = 0; // Clamp to zero
+            mate_cooldown_timer -= Time.deltaTime * time_multiplier;
+            if (mate_cooldown_timer < 0) mate_cooldown_timer = 0; // clamp to zero
         }
-        else if (currentHunger > hungerCostForMating && currentStamina > staminaCostForMating &&
-                 !IsTaskScheduled(State.Mate) && currentState != State.Mate)
+        else if (current_hunger > mating_hunger_cost && current_stamina > mating_stamina_cost &&
+                 !IsTaskScheduled(State.Mate) && current_state != State.Mate)
         {
             SearchForMate();
         }
 
-        // Don't schedule wander if we're trying to mate
-        if (currentStamina <= maxStamina * 0.1f && !IsTaskScheduled(State.Sleep) && currentState != State.Sleep)
+        // schedule idle if no tasks are left
+        if (task_queue.count == 0)
         {
-            ScheduleTask(State.Sleep, 5f);
-        }
-
-        if (taskQueue.Count == 0)
-        {
-            ScheduleTask(State.Idle, 1f); // Return to Idle state if no tasks are left
+            ScheduleTask(State.Idle, 1f);
         }
 
     }
 
-    protected virtual void SearchForMate()
+    protected virtual void SearchForMate() // searches for potential mates within the vicinity, schedules a mate task if a suitable mate is found
     {
-        if (mateCooldownTimer > 0) return;
+        if (mate_cooldown_timer > 0) return;
 
-        Collider[] nearbyAnimals = Physics.OverlapSphere(transform.position, mateApproachRange);
-        foreach (var animalCollider in nearbyAnimals)
+        Collider[] nearby_animals = Physics.OverlapSphere(transform.position, mate_approach_range); // find all animals within the approach range
+        foreach (var animal_collider in nearby_animals)
         {
-            AnimalAI otherAnimal = animalCollider.GetComponent<AnimalAI>();
-            if (otherAnimal != null && otherAnimal != this && otherAnimal.GetType() == this.GetType() && otherAnimal.mateCooldownTimer <= 0 &&
-                otherAnimal.currentHunger > hungerCostForMating && otherAnimal.currentStamina > staminaCostForMating)
+            AnimalAI other_animal = animal_collider.GetComponent<AnimalAI>();
+
+            // check if the found animal is a suitable mate
+            if (other_animal != null && other_animal != this && other_animal.GetType() == this.GetType() && other_animal.mate_cooldown_timer <= 0 &&
+                other_animal.current_hunger > mating_hunger_cost && other_animal.current_stamina > mating_stamina_cost)
             {
-                // Synchronize "mate" state between the two animals
-                if (currentState != State.Mate)
+                // synchronize "mate" state between the two animals
+                if (current_state != State.Mate)
                 {
                     ScheduleTask(State.Mate, 9f);
                 }
 
-                potentialMate = otherAnimal;
-                potentialMate.potentialMate = this;
-                return;  // We found a mate, so no need to wander anymore
+                potential_mate = other_animal;
+                potential_mate.potential_mate = this;
+                return;  // we found a mate, so no need to schedule wander anymore
             }
         }
 
-        // If no mates found, proceed with wandering (Only if we aren't already on a task)
-        if (!IsTaskScheduled(State.Wander) && currentState != State.Wander)
+        // if no mates found, proceed with wandering to search mates
+        if (!IsTaskScheduled(State.Wander) && current_state != State.Wander)
         {
-            ScheduleTask(State.Wander, 1f); // Wander if no mates are found
+            ScheduleTask(State.Wander, 1f);
         }
     }
 
-    protected virtual void Mate()
+    protected virtual void Mate() // spawns offspring if the animal is in range of the potential mate
     {
-        if (mateCooldownTimer > 0)
+        if (mate_cooldown_timer > 0)
         {
-            Debug.Log($"{gameObject.name}: Attempted to mate during cooldown.");
             return;
         }
 
-        if (potentialMate != null)
+        if (potential_mate != null)
         {
-            // Ensure that both animals are still in the mating state
-            if (potentialMate.currentState != State.Mate)
+            // ensure that both animals are still in the mating state
+            if (potential_mate.current_state != State.Mate)
             {
-                Debug.LogWarning($"{gameObject.name}: Potential mate is no longer in mate state.");
-                potentialMate = null;
+                potential_mate = null;
                 return;
             }
 
-            float distance = Vector3.Distance(transform.position, potentialMate.transform.position);
+            float distance = Vector3.Distance(transform.position, potential_mate.transform.position);
 
-            // Update destination while out of range
-            if (distance > mateRange)
+            // update destination while out of range
+            if (distance > mate_range)
             {
-                Debug.Log($"{gameObject.name} approaching {potentialMate.name} for mating.");
-                agent.SetDestination(potentialMate.transform.position);
+                agent.SetDestination(potential_mate.transform.position);
                 return;
             }
 
-            // If both animals are in range, perform mating
-            Debug.Log($"{gameObject.name} is mating with {potentialMate.name}.");
+            Vector3 midpoint = (transform.position + potential_mate.transform.position) / 2f;
 
-            // Spawn offspring logic
-            Vector3 midpoint = (transform.position + potentialMate.transform.position) / 2f;
-
-            if (NavMesh.SamplePosition(midpoint, out NavMeshHit navHit, 1f, NavMesh.AllAreas))
+            // spawn offspring at the midpoint of the two parent animals
+            if (NavMesh.SamplePosition(midpoint, out NavMeshHit nav_hit, 1f, NavMesh.AllAreas))
             {
-                Vector3 spawnPosition = navHit.position;
+                Vector3 spawnPosition = nav_hit.position;
 
                 if (resultant_animal_prefab != null)
                 {
@@ -213,126 +211,132 @@ public abstract class AnimalAI : MonoBehaviour
                 Debug.LogWarning($"{gameObject.name}: Failed to spawn offspring. No valid NavMesh position at the midpoint.");
             }
 
-            // Deduct costs and reset cooldowns
-            currentHunger -= hungerCostForMating;
-            currentStamina -= staminaCostForMating;
-            mateCooldownTimer = mateCooldownDuration;
+            // deduct costs, reset cooldowns and clear potential mate
+            current_hunger -= mating_hunger_cost;
+            current_stamina -= mating_stamina_cost;
+            mate_cooldown_timer = mate_cooldown_duration;
 
-            potentialMate.mateCooldownTimer = potentialMate.mateCooldownDuration;
-            potentialMate = null;
+            potential_mate.mate_cooldown_timer = potential_mate.mate_cooldown_duration;
+            potential_mate = null;
         }
     }
 
-    private void AgeAndHungerDecay()
+    private void AgeAndHungerDecay() // handles the aging and hunger decay logic
     {
-        // Increment age
-        currentAge += agingRate * Time.deltaTime * time_multiplier;
+        // increment age
+        current_age += aging_rate * Time.deltaTime * time_multiplier;
 
-        if (currentAge >= maxAge)
+        if (current_age >= max_age)
         {
             Die("Old age");
-            return; // Stop further processing after death
+            return; // stop further processing after death
         }
 
-        // Hunger decay logic
-        currentHunger -= HungerDecayRate * Time.deltaTime * time_multiplier;
+        // hunger decay logic
+        current_hunger -= hunger_decay_rate * Time.deltaTime * time_multiplier;
 
-        if (currentHunger <= 0)
+        if (current_hunger <= 0)
         {
-            currentHunger = 0;
-            currentHealth -= healthDecayRate * Time.deltaTime * time_multiplier;
+            current_hunger = 0;
+            current_health -= starving_health_decay_rate * Time.deltaTime * time_multiplier;
 
-            if (currentHealth <= 0)
+            if (current_health <= 0)
             {
                 Die("Starvation");
                 return;
             }
         }
     }
-
-    protected virtual void Sleep()
+    
+    protected virtual void Sleep() // regenerates stamina and health while in the sleeping state
     {
-        currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
-        currentHealth = Mathf.Min(currentHealth + healthDecayRate * Time.deltaTime, maxHealth);
+        current_stamina = Mathf.Min(current_stamina + stamina_regen_rate * Time.deltaTime * 10, max_stamina);
+        current_health = Mathf.Min(current_health + starving_health_decay_rate * Time.deltaTime, max_health);
+
+        // check if stamina is fully restored
+        if (current_stamina >= max_stamina)
+        {
+            // transition back to idle once the task is complete
+            ScheduleTask(State.Idle, 1f);
+        }
     }
 
-    private void ManageStamina()
+    private void ManageStamina() // manages the stamina of the animal based on its current state
     {
-        if (agent.velocity.sqrMagnitude > 0.1f) // If the animal is moving
+        if (agent.velocity.sqrMagnitude > 0.1f) // if the animal is moving
         {
-            if (currentState == State.Hunt || currentState == State.Flee)
+            if (current_state == State.Hunt || current_state == State.Flee) // drain stamina while hunting or fleeing
             {
-                currentStamina -= staminaDrainRate * Time.deltaTime * time_multiplier;
+                current_stamina -= stamina_drain_rate * Time.deltaTime * time_multiplier;
             }
 
-            if (currentStamina <= 0)
+            if (current_stamina <= 0)
             {
-                currentStamina = 0;
-                agent.speed *= lowStaminaSpeedMultiplier; // Reduce speed when stamina is depleted
+                current_stamina = 0;
+                agent.speed *= low_stamina_speed_multiplier; // reduce speed when stamina is depleted
             }
         }
     }
 
-    private void DetectPredators()
+    private void DetectPredators() // detects predators within the vicinity and schedules a flee task if found
     {
-        Collider[] detectedObjects = Physics.OverlapSphere(transform.position, predatorDetectionRange);
-        foreach (var detected in detectedObjects)
+        Collider[] detected_predators = Physics.OverlapSphere(transform.position, predator_detection_range);
+        foreach (var detected in detected_predators)
         {
-            if (predatorTags.Contains(detected.tag))
+            if (predator_tags.Contains(detected.tag))
             {
                 target = detected.transform;
 
-                if (IsTaskScheduled(State.Flee)) return; // Do not schedule another Flee task if already fleeing
-                else ScheduleTask(State.Flee, 50f); // Flee tasks have the highest priority
+                if (IsTaskScheduled(State.Flee)) return; // do not schedule another Flee task if already fleeing
+                else ScheduleTask(State.Flee, 50f); // flee tasks have the highest priority
             }
         }
     }
 
-    protected abstract void SearchForFood(); // different for each animal, overwrite in child classes
+    protected abstract void SearchForFood(); // the behaviour for seeking out food. different for each animal, overwrite in child classes
 
-    protected virtual void Idle()
+    protected virtual void Idle() // the default idle behaviour for the animal. regenerates stamina and schedules a wander task if idle for too long
     {
-        // Reset the timer only if it's a new transition to Idle
-        if (currentState != State.Idle)
+        // reset the timer only if it's a new transition to Idle
+        if (current_state != State.Idle)
         {
-            idleTimer = 0f;
+            idle_timer = 0f;
         }
 
-        idleTimer += Time.deltaTime * time_multiplier;
+        idle_timer += Time.deltaTime * time_multiplier;
 
-        // Schedule a Wander task if idle for too long
-        if (idleTimer >= wanderDelay)
+        // schedule a wander task if idle for too long
+        if (idle_timer >= wander_delay)
         {
-            idleTimer = 0f;
+            idle_timer = 0f;
             ScheduleTask(State.Wander, 1f);
         }
 
-        currentStamina = Mathf.Min(currentStamina + staminaRegenRate * Time.deltaTime, maxStamina);
+        current_stamina = Mathf.Min(current_stamina + stamina_regen_rate * Time.deltaTime, max_stamina);
     }
 
 
-    private void Die(string cause)
+    private void Die(string cause) // handles the death of the animal
     {
-        isDead = true;
+        is_dead = true;
         agent.isStopped = true;
         IngameConsole.Instance.LogMessage($"{gameObject.name} has died from {cause}.");
-        Destroy(gameObject); // Destroy the GameObject when dead
+        Destroy(gameObject); // destroy the GameObject (delete itself) when dead
     }
 
-    protected virtual void Wander()
+    protected virtual void Wander() // the default wandering behaviour for the animal. moves to a random location within a specified range
     {
-        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * wanderRange;
-        randomDirection += transform.position;
-        NavMeshHit hit;
+        Vector3 random_direction = UnityEngine.Random.insideUnitSphere * wander_range;
+        random_direction += transform.position;
 
-        if (NavMesh.SamplePosition(randomDirection, out hit, wanderRange, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(random_direction, out NavMeshHit hit, wander_range, NavMesh.AllAreas)) // check if the random position is on the NavMesh so the animal doesn't get stuck or stand still
         {
             agent.SetDestination(hit.position);
         }
 
     }
 
-    protected virtual void Flee()
+    protected virtual void Flee() // the default fleeing behaviour for the animal. runs away from the detected predator in the opposite direction
     {
         if (target == null && !IsTaskScheduled(State.Idle))
         {
@@ -340,21 +344,19 @@ public abstract class AnimalAI : MonoBehaviour
         }
         else
         {
-            Vector3 fleeDirection = (transform.position - target.position).normalized * 10f;
-            agent.SetDestination(transform.position + fleeDirection);
+            Vector3 flee_direction = (transform.position - target.position).normalized * 10f;
+            agent.SetDestination(transform.position + flee_direction);
             target = null;
         }
     }
 
-    protected virtual void Eat()
+    protected virtual void Eat() // the default eating behaviour for the animal. restores hunger and schedules an idle task after eating
     {
-        currentHunger = Mathf.Min(currentHunger + 20f, MaxHunger);
+        current_hunger = Mathf.Min(current_hunger + 20f, max_hunger);
 
         if (IsTaskScheduled(State.Idle))
         {
-            Debug.Log("Idle task already scheduled. returned from eat");
             return;
-
         }
         else
         {
@@ -362,14 +364,14 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
-    protected void ScheduleTask(State state, float priority)
+    protected void ScheduleTask(State state, float priority) // schedules a task with a specified state and priority
     {
-        taskQueue.Enqueue(new Task(state, priority));
+        task_queue.Enqueue(new Task(state, priority));
     }
 
-    protected bool IsTaskScheduled(State state)
+    protected bool IsTaskScheduled(State state) // checks if a task with the specified state is already scheduled
     {
-        foreach (var task in taskQueue.GetAllTasks())
+        foreach (var task in task_queue.GetAllTasks())
         {
             if (task.state == state) return true;
         }
@@ -378,35 +380,50 @@ public abstract class AnimalAI : MonoBehaviour
 
     protected void ProcessTaskQueue()
     {
-        // Prevent task switching if the current task is actively being completed
-        if ((currentState == State.Mate && potentialMate != null &&
-                Vector3.Distance(transform.position, potentialMate.transform.position) > mateRange) ||
-            (currentState == State.Wander && !destinationReached) ||
-            (currentState == State.Flee && !destinationReached) ||
-            (currentState == State.Hunt && target != null && agent.hasPath && !destinationReached))
+        // do nothing if there are no tasks in the queue
+        if (task_queue.count == 0) return;
+
+        // get the next task in the queue
+        Task next_task = task_queue.GetAllTasks()[0];
+
+        // transition to Sleep if it has a higher priority than the current state
+        if (current_state != State.Sleep && next_task.state == State.Sleep)
+        {
+            current_state = State.Sleep;
+            task_queue.Dequeue(); // remove the Sleep task from the queue
+            Sleep();
+            return;
+        }
+
+        // Allow Hunt to be interrupted by Sleep
+        if (current_state == State.Hunt && next_task.priority > 15f && next_task.state == State.Sleep)
+        {
+            current_state = next_task.state;
+            task_queue.Dequeue();
+            Sleep();
+            return;
+        }
+
+        // Prevent state change until the current task is complete
+        if ((current_state == State.Mate && potential_mate != null && Vector3.Distance(transform.position, potential_mate.transform.position) > mate_range) ||
+            (current_state == State.Wander && !is_destination_reached) ||
+            (current_state == State.Flee && !is_destination_reached) ||
+            (current_state == State.Hunt && agent.hasPath && !is_destination_reached))
         {
             return;
         }
 
-        Task nextTask = taskQueue.Dequeue();
-        currentState = nextTask.state;
+        // Dequeue and execute the next task
+        next_task = task_queue.Dequeue();
+        current_state = next_task.state;
 
-        switch (currentState)
+        switch (current_state)
         {
             case State.Idle:
                 Idle();
                 break;
             case State.Wander:
-                if (IsTaskScheduled(State.Hunt))
-                {
-                    Debug.Log($"{gameObject.name}: Interrupting Wander to start Hunt.");
-                    currentState = State.Hunt; // Force transition to Hunt
-                    SearchForFood();
-                }
-                else
-                {
-                    Wander();
-                }
+                Wander();
                 break;
             case State.Hunt:
                 SearchForFood();
@@ -426,32 +443,31 @@ public abstract class AnimalAI : MonoBehaviour
         }
     }
 
-
-    protected class Task
+    protected class Task // a class to represent a task with a state and priority
     {
         public State state;
         public float priority;
 
-        public Task(State state, float priority)
+        public Task(State state, float priority) // constructor to initialize the task
         {
             this.state = state;
             this.priority = priority;
         }
     }
 
-    protected class PriorityQueue
+    protected class PriorityQueue // class to represent the priority queue of tasks
     {
         private List<Task> elements = new List<Task>();
 
-        public int Count => elements.Count;
+        public int count => elements.Count;
 
-        public void Enqueue(Task item)
+        public void Enqueue(Task item) // adds a task to the queue. sorts the tasks based on priority
         {
             elements.Add(item);
-            elements.Sort((a, b) => b.priority.CompareTo(a.priority)); // Higher priority first
+            elements.Sort((a, b) => b.priority.CompareTo(a.priority)); // higher priority first
         }
 
-        public Task Dequeue()
+        public Task Dequeue() // removes and returns the task with the highest priority
         {
             if (elements.Count == 0) return null;
 
@@ -460,76 +476,88 @@ public abstract class AnimalAI : MonoBehaviour
             return item;
         }
 
-        public List<Task> GetAllTasks()
+        public List<Task> GetAllTasks() // returns all of the tasks in the queue
         {
-            return new List<Task>(elements); // Return a copy of the list
+            return new List<Task>(elements);
         }
     }
 
+    // these allow for controlled access to class data by using get and set accessors. these values are used in my SaveGameHandler class to save and load the game state
     public string CurrentState
     {
-        get { return currentState.ToString(); } // Convert the enum to a string
+        get { return current_state.ToString(); } // convert the enum to a string
     }
 
     public float CurrentHealth
     {
-        get { return currentHealth; }
-        set { currentHealth = Mathf.Clamp(value, 0, maxHealth); }
+        get { return current_health; }
+        set { current_health = Mathf.Clamp(value, 0, max_health); } // clamps the value between 0 and <max_health>
     }
 
     public float CurrentHunger
     {
-        get { return currentHunger; }
-        set { currentHunger = Mathf.Clamp(value, 0, MaxHunger); }
+        get { return current_hunger; }
+        set { current_hunger = Mathf.Clamp(value, 0, max_hunger); }
+    }
+
+    public float CurrentAge
+    {
+        get { return current_age; }
+        set { current_age = Mathf.Clamp(value, 0, max_age); }
+    }
+
+    public float MatingCooldownTimer
+    {
+        get { return mate_cooldown_timer; }
+        set { mate_cooldown_timer = Mathf.Clamp(value, 0, mate_cooldown_duration); }
     }
 
     private void OnGUI() // reserved Unity method. renders the specified info on the screen as text
     {
-        if (Time.timeScale == 0) return; // Do not render debug info when paused
+        if (Time.timeScale == 0) return; // do not render debug info when paused
 
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
-        if (screenPosition.z > 0)  // Only show if in front of the camera
+        if (screenPosition.z > 0)  // only show if in front of the camera
         {
             GUIStyle style = new GUIStyle();
             style.normal.textColor = Color.white;
             style.fontSize = 12;
 
-            // Build the debug text with proper formatting and spacing
+            // build the debug text with proper formatting and spacing
             string debugText = $"Name: {gameObject.name}\n" +
-                               $"State: {currentState}\n" +
-                               $"Age: {currentAge:F1}/{maxAge}\n" +
-                               $"Hunger: {currentHunger:F1}/{MaxHunger}\n" +
-                               $"Health: {currentHealth:F1}/{maxHealth}\n" +
-                               $"Stamina: {currentStamina:F1}/{maxStamina}\n" +
-                               $"Idle Timer: {idleTimer:F1}/{wanderDelay} seconds\n" +
-                               $"Mating Cooldown: {mateCooldownTimer:F1}/{mateCooldownDuration:F1}s\n" +
-                               $"Task Queue: {taskQueue.Count} tasks\n";
+                               $"State: {current_state}\n" +
+                               $"Age: {current_age:F1}/{max_age}\n" +
+                               $"Hunger: {current_hunger:F1}/{max_hunger}\n" +
+                               $"Health: {current_health:F1}/{max_health}\n" +
+                               $"Stamina: {current_stamina:F1}/{max_stamina}\n" +
+                               $"Idle Timer: {idle_timer:F1}/{wander_delay} seconds\n" +
+                               $"Mating Cooldown: {mate_cooldown_timer:F1}/{mate_cooldown_duration:F1}s\n" +
+                               $"Task Queue: {task_queue.count} tasks\n";
 
-            // Display each task's state and priority in the task queue
-            List<Task> tasks = taskQueue.GetAllTasks();
+            // display each task's state and priority in the task queue
+            List<Task> tasks = task_queue.GetAllTasks();
             foreach (var task in tasks)
             {
                 debugText += $"  - {task.state} (Priority: {task.priority})\n";
             }
 
-            // Display the text
+            // display the text
             GUI.Label(new Rect((screenPosition.x - 30), (Screen.height - screenPosition.y - 150), 250, 300), debugText, style);
         }
     }
 
-    private void OnDrawGizmosSelected() // reserved Unity method. visualises the different ranges. for debugging
+    private void OnDrawGizmosSelected() // reserved Unity method. visualises the different ranges. for debugging during development
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, SearchFoodRange);
+        Gizmos.DrawWireSphere(transform.position, search_food_range);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, eatRange);
+        Gizmos.DrawWireSphere(transform.position, eat_range);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, predatorDetectionRange);
+        Gizmos.DrawWireSphere(transform.position, predator_detection_range);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawWireSphere(transform.position, mateRange);
+        Gizmos.DrawWireSphere(transform.position, mate_range);
     }
-
 }

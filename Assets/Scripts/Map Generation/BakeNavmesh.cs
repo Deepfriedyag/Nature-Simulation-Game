@@ -2,17 +2,17 @@ using UnityEngine;
 using Unity.AI.Navigation;
 
 // this class bakes the navmesh (required for AI navigation) at runtime. Normally this is not needed but since the game world is procedurally generated, we need this
-public class BakeNavmesh : MonoBehaviour
+public class BakeNavmesh : MonoBehaviour // MonoBehaviour is the base class from which every Unity script derives
 {
     [SerializeField] private NavMeshSurface navmesh_surface;
-    [SerializeField] private bool generate_navmesh = true; // I can set this to true or false in the unity editor. Good for debugging
+    [SerializeField] private bool is_generate_navmesh = true; // a toggle for debugging purposes
 
-    private void Start() // called once when the script is first loaded
+    private void Start() // reserved Unity method. called once when the script is first loaded    
     {
-        if (generate_navmesh == true) Invoke(nameof(GenerateNavmesh), 0.1f); // call the GenerateNavmesh method after a short delay to ensure the terrain is fully generated first
+        if (is_generate_navmesh == true) Invoke(nameof(GenerateNavmesh), 0.1f); // call the GenerateNavmesh() method after a short delay to ensure the terrain is fully generated first
     }
 
-    public void GenerateNavmesh()
+    public void GenerateNavmesh() // this method bakes the navmesh which is required for AI pathfinding
     {
         if (navmesh_surface == null)
         {
@@ -20,7 +20,7 @@ public class BakeNavmesh : MonoBehaviour
 
             if (navmesh_surface == null)
             {
-                Debug.LogError("error - no NavMeshSurface component found");
+                Debug.LogError("No NavMeshSurface component found");
                 return;
             }
         }

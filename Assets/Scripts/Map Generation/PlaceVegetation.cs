@@ -1,19 +1,19 @@
-using System.Collections.Generic; // import the System.Collections.Generic namespace to use List and HashSet
+using System.Collections.Generic; // needed to use List and HashSet
 using UnityEngine;
 
-public class PlaceVegetation : MonoBehaviour
+public class PlaceVegetation : MonoBehaviour // MonoBehaviour is the base class for all Unity scripts
 {
-    public int vegetation_count = 2000;
-    public float height_offset = 0.5f; // offset to prevent objects from being buried in the terrain
-    public float min_height = 2.5f;
-    public float max_height = 5f;
+    [SerializeField] private int vegetation_count = 2000;
+    [SerializeField] private float height_offset = 0.5f;
+    [SerializeField] private float min_height = 2.5f;
+    [SerializeField] private float max_height = 5.1f;
+    [SerializeField] private List<GameObject> vegetation_prefabs; // contains the vegetation prefabs (tree, grass etc.)
+    [SerializeField] private MeshFilter terrain_mesh_filter; // reference to the MeshFilter component of the terrain mesh in the game world
+    [SerializeField] private Transform spawned_object_parent; // reference to the parent object to hold all the spawned gameobjects
 
-    public List<GameObject> vegetation_prefabs; // list of the vegetation prefabs (tree, grass etc.) to spawn in the world
-    public MeshFilter terrain_mesh_filter; // reference to the MeshFilter of the terrain mesh in the game world
-    public Transform spawned_object_parent; // parent object to hold all the spawned gameobjects
     private Mesh terrain_mesh;
 
-    public void PlaceObjects()
+    public void PlaceObjects() // Places the vegetation objects in the game world. this method is called from my MapGenerator class in the world generation phase
     {
         terrain_mesh = terrain_mesh_filter.mesh;
         Vector3[] vertices = terrain_mesh.vertices;
@@ -29,7 +29,7 @@ public class PlaceVegetation : MonoBehaviour
             {
                 random_index = Random.Range(0, vertices.Length);
             }
-            while (selected_indices.Contains(random_index)); // keep generating random indices until we find one that hasn't been selected yet
+            while (selected_indices.Contains(random_index)); // keep generating random indexes until we find one that hasn't been selected yet
 
             selected_indices.Add(random_index);
             Vector3 position = vertices[random_index];
@@ -39,12 +39,9 @@ public class PlaceVegetation : MonoBehaviour
             if (world_position.y >= min_height && world_position.y <= max_height)
             {
                 int random_prefab_index = Random.Range(0, vegetation_prefabs.Count);
-                GameObject tree = Instantiate(vegetation_prefabs[random_prefab_index], world_position + normal * height_offset, Quaternion.identity, spawned_object_parent); // spawn a vegetation prefab at the world position as a child object
+                GameObject tree = Instantiate(vegetation_prefabs[random_prefab_index], world_position + normal * height_offset, Quaternion.identity, spawned_object_parent); // spawn a vegetation prefab at the <world_position> as a child object to <spawned_object_parent>
                 tree.transform.up = normal;
             }
-
         }
-
     }
-
 }

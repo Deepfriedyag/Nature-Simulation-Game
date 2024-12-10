@@ -1,24 +1,28 @@
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
+public class CameraMovement : MonoBehaviour // MonoBehaviour is the base class from which every Unity script derives
 {
-    public float sensitivity = 100f;
-    public float slow_speed, normal_speed, fast_speed; // we can change these values in the unity inspector
-    float current_speed;
+    [SerializeField] private float sensitivity = 10f;
+    [SerializeField] private float slow_speed = 1f;
+    [SerializeField] private float normal_speed = 5f;
+    [SerializeField] private float fast_speed = 50f;
 
-    protected void Start() // called when the script is first loaded
+    private float vertical_rotation = 0f; // Track the vertical rotation of the camera
+    private float current_speed;
+
+    private void Start() // reserved Unity method. called when the script is first loaded
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    protected void Update() // called every frame
+    private void Update() // reserved Unity method. called every frame
     {
         MoveCamera();
         RotateCamera();
     }
 
-    protected void MoveCamera()
+    private void MoveCamera() // moves the camera with different speeds based on the player input
     {
         Vector3 player_input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
@@ -35,16 +39,23 @@ public class CameraMovement : MonoBehaviour
             current_speed = normal_speed;
         }
 
-        transform.Translate(translation: current_speed * Time.deltaTime * player_input); // move the camera based on the input multiplied by the speed and the time since the last frame
+        transform.Translate(translation: current_speed * Time.deltaTime * player_input); // multiply by the time since the last frame (Time.deltaTime) to make the movement framerate independent
 
     }
 
-    protected void RotateCamera() // rotates the camera based on the mouse input
+    private void RotateCamera() // rotates the camera based on the mouse input
     {
-        Vector3 mouse_input = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
-        transform.Rotate(50 * sensitivity * Time.deltaTime * mouse_input);
-        Vector3 euler_rotation = transform.rotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(euler_rotation.x, euler_rotation.y, 0);
-    }
+        Vector2 mouse_input = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
+        // adjust horizontal rotation
+        transform.Rotate(Vector3.up, mouse_input.x * sensitivity * Time.deltaTime);
+
+        // adjust vertical rotation and clamp it
+        vertical_rotation -= mouse_input.y * sensitivity * Time.deltaTime;
+        vertical_rotation = Mathf.Clamp(vertical_rotation, -90f, 90f); // Prevent looking directly up/down
+
+        // apply vertical rotation while maintaining horizontal rotation
+        Quaternion targetRotation = Quaternion.Euler(vertical_rotation, transform.rotation.eulerAngles.y, 0);
+        transform.rotation = targetRotation;
+    }
 }

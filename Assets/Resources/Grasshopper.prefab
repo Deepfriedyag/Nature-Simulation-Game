@@ -80,30 +80,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d53925eb43038ce4d994a9c849bf39bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  healthDecayRate: 5
-  MaxHunger: 100
-  HungerDecayRate: 1
-  hungerThreshold: 60
-  SearchFoodRange: 20
-  eatRange: 0.5
-  maxStamina: 100
-  staminaRegenRate: 1
-  staminaDrainRate: 5
-  lowStaminaSpeedMultiplier: 0.5
-  mateRange: 5
-  mateApproachRange: 10
-  mateCooldownDuration: 30
+  max_health: 100
+  health_decay_rate: 5
+  max_hunger: 100
+  hunger_decay_rate: 1
+  hunger_threshold: 60
+  search_food_range: 15
+  eat_range: 0.15
+  max_stamina: 100
+  stamina_regen_rate: 1
+  stamina_drain_rate: 5
+  low_stamina_speed_multiplier: 0.5
+  mate_range: 0.5
+  mate_approach_range: 8
+  mate_cooldown_duration: 30
   resultant_animal_prefab: {fileID: 538437904605431303}
-  hungerCostForMating: 20
-  staminaCostForMating: 30
-  maxAge: 5
-  agingRate: 0.01
-  predatorDetectionRange: 3
-  predatorTags:
-  - Fox
-  wanderRange: 10
-  wanderDelay: 3
+  mating_hunger_cost: 20
+  mating_stamina_cost: 30
+  max_age: 5
+  aging_rate: 0.01
+  predator_detection_range: 5
+  predator_tags: []
+  wander_range: 5
+  wander_delay: 3
 --- !u!195 &6083089692286442799
 NavMeshAgent:
   m_ObjectHideFlags: 0

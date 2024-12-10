@@ -1,16 +1,16 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.SceneManagement; // needed to load scenes in Unity (like the main menu or the game world)
 
 public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base class for all unity scripts
 {
     [SerializeField] private SaveGameHandler SaveGameHandler; // reference to my class
 
-    // references to each menu panel - I have to set these myself manually in the unity editor because these are "game objects" instead of scripts and unity can't serialize them
-    public GameObject pause_menu_panel;
-    public GameObject options_menu_panel;
-    public GameObject main_menu_panel;
+    // references to the different menu panels in the game
+    [SerializeField] private GameObject pause_menu_panel;
+    [SerializeField] private GameObject options_menu_panel;
+    [SerializeField] private GameObject main_menu_panel;
 
-    void Start() // called once when the script is first loaded in the game
+    private void Start() // reserved Unity method. called once when the script is first loaded
     {
         if (SceneManager.GetActiveScene().name == "Main Menu")
         {
@@ -24,7 +24,7 @@ public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base
 
     }
 
-    void Update() // called every frame
+    private void Update() // reserved Unity method. called every frame
     {
         // check if esc is pressed
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -33,7 +33,7 @@ public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base
         }
     }
 
-    // the methods below are called when certain buttons are pressed in menus
+    // the methods below are called when certain buttons are pressed in menus therefore they have to be declared public
     public void ShowPauseMenu()
     {
         Time.timeScale = 0; // pause the game
@@ -74,14 +74,14 @@ public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base
 
     public void NewGame()
     {
-        MapGenerator.new_game = true; // set the variable in my class to true to generate a random game world
+        MapGenerator.is_new_game = true; // set the variable in my MapGenerator class to true to generate a random game world
         SceneManager.LoadScene("Game");
         Time.timeScale = 1;
     }
 
     public void LoadGame()
     {
-        MapGenerator.new_game = false;
+        MapGenerator.is_new_game = false;
         SceneManager.LoadScene("Game");
         Time.timeScale = 1;
     }
@@ -90,5 +90,4 @@ public class MenuHandler : MonoBehaviour // inherit from MonoBehaviour, the base
     {
         Application.Quit();
     }
-
 }
