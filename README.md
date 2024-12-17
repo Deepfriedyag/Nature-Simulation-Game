@@ -1,5 +1,7 @@
 This is a game that aims to achieve a 3D sandbox environment where players can spawn in vegetation and animals and watch the animals show suitable behaviour to their species and surroundings.
 
+To see the source code and be able to edit everyhting or see the inner workings of the game, clone this repository and open it in Unity.
+
 # Features
 * Procedurally generated terrain with biomes and vegetation using perlin noise.
 * Foxes and grasshoppers with AI.
