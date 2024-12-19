@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_health: 100
-  health_decay_rate: 5
+  starving_health_decay_rate: 5
   max_hunger: 100
   hunger_decay_rate: 1
   hunger_threshold: 60
@@ -94,13 +94,14 @@ MonoBehaviour:
   mate_range: 0.5
   mate_approach_range: 8
   mate_cooldown_duration: 30
-  resultant_animal_prefab: {fileID: 538437904605431303}
   mating_hunger_cost: 20
   mating_stamina_cost: 30
+  resultant_animal_prefab: {fileID: 538437904605431303}
   max_age: 5
   aging_rate: 0.01
   predator_detection_range: 5
-  predator_tags: []
+  predator_tags:
+  - Fox
   wander_range: 5
   wander_delay: 3
 --- !u!195 &6083089692286442799

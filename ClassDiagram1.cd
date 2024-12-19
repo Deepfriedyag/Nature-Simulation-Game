@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="AnimalAI">
+    <Position X="1.75" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="AnimalAI.State">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Animal AI\AnimalAI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Class Name="AnimalAI.Task">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Animal AI\AnimalAI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="AnimalAI.PriorityQueue">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Animal AI\AnimalAI.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QRQAwYBJESIEIQAgIEACACWjAEYgCBAEAQGmQGJBRgA=</HashCode>
+      <FileName>Assets\Scripts\Animal AI\AnimalAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FoxAI">
+    <Position X="0.5" Y="21.5" Width="2" />
+    <InheritanceLine Type="AnimalAI" FixedFromPoint="true">
+      <Path>
+        <Point X="3.062" Y="20.708" />
+        <Point X="3.062" Y="21.125" />
+        <Point X="1.5" Y="21.125" />
+        <Point X="1.5" Y="21.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAECAAAAAAAAAAAACgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Animal AI\FoxAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GrasshopperAI">
+    <Position X="3.75" Y="21.5" Width="2" />
+    <InheritanceLine Type="AnimalAI" FixedFromPoint="true">
+      <Path>
+        <Point X="3.062" Y="20.708" />
+        <Point X="3.062" Y="21.125" />
+        <Point X="4.75" Y="21.125" />
+        <Point X="4.75" Y="21.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAECAAAAAAAAAAAACgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Animal AI\GrasshopperAI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BakeNavmesh">
+    <Position X="5" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAg=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\BakeNavmesh.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapDisplay">
+    <Position X="19.25" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAgAAAAAEAAAAAAAAAAAAAAAABgA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\MapDisplay.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MapGenerator">
+    <Position X="8.75" Y="0.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="MapGenerator.DrawMode">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Map Generation\MapGenerator.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Struct Name="MapGenerator.TerrainType">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Map Generation\MapGenerator.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAECIAAAAgAAEAAEBIIBAAAggAAAAACgFQAAE=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\MapGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshGenerator">
+    <Position X="19.25" Y="11.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\MeshGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshData">
+    <Position X="19.25" Y="6.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQQAAAAAQAAAAAIAgAAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\MeshGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Noise">
+    <Position X="19.25" Y="13" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\Noise.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlaceVegetation">
+    <Position X="8.75" Y="9.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAIAAAAAAAAFAAAAAAgIQAAAAQAAAAAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\PlaceVegetation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpreadVegetation">
+    <Position X="12.25" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAAAKAAAAAAAAEAAAAAAAIQAIAAQAAAgAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\SpreadVegetation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextureGenerator">
+    <Position X="19.25" Y="9.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Map Generation\TextureGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ConfigMenu">
+    <Position X="12.25" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAABACAAAAAAAACAAIACAACCAAA=</HashCode>
+      <FileName>Assets\Scripts\Menus\ConfigMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IngameConsole">
+    <Position X="19.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQQAAAAACAgAAAAAAAAAAAAACAAABQAAAAAAAAEA=</HashCode>
+      <FileName>Assets\Scripts\Menus\IngameConsole.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MenuHandler">
+    <Position X="12.25" Y="4.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAABASAAAEIAAFAAAAAAAECAEAAAQAAE=</HashCode>
+      <FileName>Assets\Scripts\Menus\MenuHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpawnMenu">
+    <Position X="15.75" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAgAACBAAAAAAAACAAAAAAAAABAAAAAAAAgABAA=</HashCode>
+      <FileName>Assets\Scripts\Menus\SpawnMenu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraMovement">
+    <Position X="15.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQCAgAEACAAIAAAAgAQAAAAAAAAAAAAAAQAIAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\CameraMovement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjectSpawner">
+    <Position X="15.75" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAABAACAAAAAAAAgAAAAAAhAAAAACAAAAAAIAAA=</HashCode>
+      <FileName>Assets\Scripts\ObjectSpawner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SaveGameHandler">
+    <Position X="5" Y="0.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="SaveGameHandler.GameData">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\SaveGameHandler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SaveGameHandler.AnimalData">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\SaveGameHandler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SaveGameHandler.VegetationData">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\SaveGameHandler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIgAAAAAAAAQAAAEAEAAAAAAAAAAAAAAQAAAAAAAAAE=</HashCode>
+      <FileName>Assets\Scripts\SaveGameHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteBillboard">
+    <Position X="15.75" Y="11.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SpriteBillboard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

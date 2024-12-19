@@ -386,29 +386,12 @@ public abstract class AnimalAI : MonoBehaviour
         // get the next task in the queue
         Task next_task = task_queue.GetAllTasks()[0];
 
-        // transition to Sleep if it has a higher priority than the current state
-        if (current_state != State.Sleep && next_task.state == State.Sleep)
-        {
-            current_state = State.Sleep;
-            task_queue.Dequeue(); // remove the Sleep task from the queue
-            Sleep();
-            return;
-        }
-
-        // Allow Hunt to be interrupted by Sleep
-        if (current_state == State.Hunt && next_task.priority > 15f && next_task.state == State.Sleep)
-        {
-            current_state = next_task.state;
-            task_queue.Dequeue();
-            Sleep();
-            return;
-        }
-
         // Prevent state change until the current task is complete
         if ((current_state == State.Mate && potential_mate != null && Vector3.Distance(transform.position, potential_mate.transform.position) > mate_range) ||
             (current_state == State.Wander && !is_destination_reached) ||
             (current_state == State.Flee && !is_destination_reached) ||
-            (current_state == State.Hunt && agent.hasPath && !is_destination_reached))
+            (current_state == State.Hunt && agent.hasPath && !is_destination_reached && next_task.state != State.Sleep) 
+            )
         {
             return;
         }

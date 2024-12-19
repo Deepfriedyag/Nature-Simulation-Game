@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   max_health: 100
-  health_decay_rate: 5
+  starving_health_decay_rate: 5
   max_hunger: 100
   hunger_decay_rate: 1
   hunger_threshold: 60
@@ -114,9 +114,9 @@ MonoBehaviour:
   mate_range: 0.5
   mate_approach_range: 8
   mate_cooldown_duration: 60
-  resultant_animal_prefab: {fileID: 6533730962555232937}
   mating_hunger_cost: 20
   mating_stamina_cost: 30
+  resultant_animal_prefab: {fileID: 6533730962555232937}
   max_age: 10
   aging_rate: 0.01
   predator_detection_range: 5
@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 6533730962555232937}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.4, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
