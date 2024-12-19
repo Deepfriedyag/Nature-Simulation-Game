@@ -6,7 +6,7 @@ If you want to see the inner workings of the game or compile this project from t
 
 
 # Features
-* The animals are able to exhibit behaviours such as fleeing, wandering, hunting, sleeping, and mating. They correctly avoid pathfinding to the sea or the peaks of mountains.
+* NPC animals that are able to exhibit behaviours such as fleeing, wandering, hunting, sleeping, and mating. They correctly avoid pathfinding to the sea or the peaks of mountains.
 * 3D game world that is procedurally generated with the use of Perlin noise. The terrain has realistic features such as spreading vegetation, deep and shallow seas, mountains, and plateaus.
 * My AnimalAI class offers an easily extendable framework for adding more animals and functionality.
 * Priority queue for managing the AI states and behaviours.
