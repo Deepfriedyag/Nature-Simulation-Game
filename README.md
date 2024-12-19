@@ -22,11 +22,17 @@ https://www.youtube.com/watch?v=FqfRRGODOvQ
 
 # Controls
 WASD - Movement
+
 Mouse - Look around
+
 Holding Shift - Increases movement speed
+
 Holding Ctrl - Decreases movement speed
+
 Esc - Bring up the pause menu
+
 E - Bring up the spawn menu
+
 Left click - Spawns the selected object at a suitable location in front of the player
 
 #
