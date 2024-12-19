@@ -13,6 +13,7 @@ If you want to see the inner workings of the game or compile this project from t
 * The player can manually spawn in any object they desire.
 * Save load system that stores the save file locally in a ".json" file. The save file can then be loaded to fully restore the previous gamestate
 * Handmade pixel art for the spawnable objects.
+* Functional settings menu for configuring the resolution, volume, and window mode.
 
 # Demonstration Video
 https://www.youtube.com/watch?v=FqfRRGODOvQ
